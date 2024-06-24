@@ -71,9 +71,143 @@ Sources
 ### 문제 1.
 중복되는 비즈니스 로직에 대한 처리: 게시글과 거래글 2종류의 Response 타입이 있었는데 타입만 다를 뿐 로직은 거의 동일하여, 공통부분을 프로토콜과 제네릭으로 추상화하고 다른 로직은 extension을 활용하여 중복 코드를 최소화할 수 있었음
 
+- 개선 전
+```swift
+public protocol ArticleDataSource {
+     func createArticle(article: Article) async throws
+     func readArticle(articleID: String) async throws -> Article
+     func readRecentArticle(category: ANBDCategory) async throws -> Article
+     func readArticleList() async throws -> [Article]
+     func refreshAll() async throws -> [Article]
+     func updateArticle(article: Article) async throws
+     func deleteArticle(articleID: String) async throws
+     func resetQuery()
+ }
+
+protocol TradeDataSource {
+     func createTrade(trade: Trade) async throws
+     func readTrade(tradeID: String) async throws -> Trade
+     func readTradeList() async throws -> [Trade]
+     func readRecentTradeList(category: ANBDCategory) async throws -> [Trade]
+     func refreshAll() async throws -> [Trade]
+     func updateTrade(trade: Trade) async throws
+     func deleteTrade(tradeID: String) async throws
+     func resetQuery()
+ }
+```
+
+- 개선 후
+```swift
+protocol Postable<Item>: AnyObject {
+    associatedtype Item: Codable & Identifiable
+    
+    func createItem(item: Item) async throws
+    func readItem(itemID: String) async throws -> Item
+    func readItemList() async throws -> [Item]
+    func refreshAll() async throws -> [Item]
+    func updateItem(item: Item) async throws
+    func deleteItem(itemID: String) async throws
+    func resetQuery()
+}
+
+extension Postable where Item == Article {
+
+    func readRecentArticle(category: ANBDCategory) async throws -> Article {
+        // ...
+    }
+
+}
+
+extension Postable where Item == Trade {
+
+    func readRecentTradeList(category: ANBDCategory) async throws -> [Trade] {
+        // ...
+    }
+
+}
+```
+
 ### 문제 2.
 게시물의 사진 수정 로직: 기존에 게시글 사진 수정 시 모든 사진을 DB에서 지우고 수정한 이미지 배열을 업로드하는 방식으로 구현하였으나 데이터 낭비가 심하다 생각이 들어 사진의 id를 비교하여 추가, 삭제된 것에 대한 처리만 하도록 로직을 수정하였음
 
+- 수정 전
+```swift
+public func updateImageList(
+    path storagePath: StoragePath,
+    containerID: String,
+    imagePaths: [String],
+    imageDatas: [Data]
+) async throws -> [String] {
+    let storageImagePathList = try await storageRef
+        .child(storagePath.rawValue)
+        .child(containerID)
+        .listAll()
+        .items
+        .map { $0.name }
+
+    try await deleteImageList(path: storagePath, containerID: containerID, imagePaths: storageImagePathList)
+    let updatedPath = try await uploadImageList(path: storagePath, containerID: containerID, imageDatas: imageDatas)
+
+    return updatedPath
+}
+```
+
+- 수정 후
+```swift
+public func updateImageList(
+    path storagePath: StoragePath,
+    containerID: String,
+    thumbnailPath: String,
+    addImageList: [Data],
+    deleteList: [String]
+) async throws -> [String] {
+    var storagePathList = try await storageRef
+        .child(storagePath.rawValue)
+        .child(containerID)
+        .listAll()
+        .items
+        .map { $0.name }
+        
+    try await deleteImageList(
+        path: storagePath,
+        containerID: containerID,
+        imagePaths: deleteList
+    )
+        
+    storagePathList = storagePathList.filter { !deleteList.contains($0) }
+        
+    if !addImageList.isEmpty {
+        let newImagePath = try await uploadImageList(
+            path: storagePath,
+            isUpdate: true,
+            containerID: containerID,
+            imageDatas: addImageList
+        )
+            
+        storagePathList += newImagePath
+    }
+        
+    let thumbnailImage = try await downloadImage(
+        path: storagePath,
+        containerID: containerID,
+        imagePath: storagePathList[0]
+    )
+        
+    if let resizedImage = await UIImage(data: thumbnailImage)?
+        .byPreparingThumbnail(ofSize: .init(width: 512, height: 512))?
+        .jpegData(compressionQuality: 1) {
+            
+        try await updateImage(
+            path: storagePath,
+            containerID: "\(containerID)/thumbnail",
+            imagePath: thumbnailPath,
+            imageData: resizedImage
+        )
+    }
+        
+    return storagePathList
+}
+```
 <br>
 
 ### Screen 📱
