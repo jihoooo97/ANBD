@@ -1,12 +1,12 @@
 # 🐳 ANBD
-> 환경을 위해 아나바다를 공유하고 실천하는 커뮤니티  
+> 사용하지 않는 물건을 교환하거나 나눔하고, 절약 방법을 커뮤니티에 공유하여 환경 보호에 기여할 수 있는 플랫폼  
 [앱스토어](https://apps.apple.com/kr/app/anbd/id6502585089)
 <br>
 
 ### 개발 환경 🛠️
 | 버전 | iOS 16.0+ |
 |:-:|:-:|
-| 프레임워크 | SwiftUI |
+| Framework | SwiftUI |
 | 구조 | MVVM-C + Combine + Clean Architecture |
 | BaaS | FirebaseFirestore |
 | Library | Firebase, Kingfisher |
@@ -69,7 +69,11 @@ Sources
 
 ## Experience
 ### 문제 1.
+중복되는 비즈니스 로직에 대한 처리: 게시글과 거래글 2종류의 Response 타입이 있었는데 타입만 다를 뿐 로직은 거의 동일하여, 공통부분을 프로토콜과 제네릭으로 추상화하고 다른 로직은 extension을 활용하여 중복 코드를 최소화할 수 있었음
+
 ### 문제 2.
+게시물의 사진 수정 로직: 기존에 게시글 사진 수정 시 모든 사진을 DB에서 지우고 수정한 이미지 배열을 업로드하는 방식으로 구현하였으나 데이터 낭비가 심하다 생각이 들어 사진의 id를 비교하여 추가, 삭제된 것에 대한 처리만 하도록 로직을 수정하였음
+
 <br>
 
 ### Screen 📱
