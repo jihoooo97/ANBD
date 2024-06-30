@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:ANBDCore">
+   </FileRef>
+   <FileRef
       location = "group:ANBD.xcodeproj">
    </FileRef>
 </Workspace>

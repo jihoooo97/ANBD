@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,10 @@
 		131B9E182C3130270090A69B /* TradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131B9E172C3130270090A69B /* TradeView.swift */; };
 		131B9E1A2C3130310090A69B /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131B9E192C3130310090A69B /* ChatView.swift */; };
 		131B9E1C2C31303A0090A69B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131B9E1B2C31303A0090A69B /* ProfileView.swift */; };
-		131B9E1E2C3132160090A69B /* ANBDCore in Resources */ = {isa = PBXBuildFile; fileRef = 131B9E1D2C3132160090A69B /* ANBDCore */; };
+		131B9E212C31354A0090A69B /* Injector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131B9E202C31354A0090A69B /* Injector.swift */; };
+		131B9E232C3136E80090A69B /* DataAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131B9E222C3136E80090A69B /* DataAssembly.swift */; };
+		131B9E272C31375E0090A69B /* DomainAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131B9E262C31375E0090A69B /* DomainAssembly.swift */; };
+		131B9E292C3138E60090A69B /* ANBDCore in Frameworks */ = {isa = PBXBuildFile; productRef = 131B9E282C3138E60090A69B /* ANBDCore */; };
 		13AC16372C3128EA00E7BA1F /* ANBDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AC16362C3128EA00E7BA1F /* ANBDApp.swift */; };
 		13AC16392C3128EA00E7BA1F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AC16382C3128EA00E7BA1F /* ContentView.swift */; };
 		13AC163B2C3128EB00E7BA1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13AC163A2C3128EB00E7BA1F /* Assets.xcassets */; };
@@ -36,7 +39,9 @@
 		131B9E172C3130270090A69B /* TradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeView.swift; sourceTree = "<group>"; };
 		131B9E192C3130310090A69B /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		131B9E1B2C31303A0090A69B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		131B9E1D2C3132160090A69B /* ANBDCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ANBDCore; path = ../ANBDCore; sourceTree = "<group>"; };
+		131B9E202C31354A0090A69B /* Injector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Injector.swift; sourceTree = "<group>"; };
+		131B9E222C3136E80090A69B /* DataAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssembly.swift; sourceTree = "<group>"; };
+		131B9E262C31375E0090A69B /* DomainAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainAssembly.swift; sourceTree = "<group>"; };
 		13AC16332C3128EA00E7BA1F /* ANBD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ANBD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13AC16362C3128EA00E7BA1F /* ANBDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANBDApp.swift; sourceTree = "<group>"; };
 		13AC16382C3128EA00E7BA1F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -50,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				131B9E292C3138E60090A69B /* ANBDCore in Frameworks */,
 				131B9E122C312EF20090A69B /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,6 +112,7 @@
 		131B9E0D2C312E490090A69B /* App */ = {
 			isa = PBXGroup;
 			children = (
+				131B9E1F2C31353F0090A69B /* DI */,
 				13AC16362C3128EA00E7BA1F /* ANBDApp.swift */,
 				13AC16382C3128EA00E7BA1F /* ContentView.swift */,
 			);
@@ -128,10 +135,19 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		131B9E1F2C31353F0090A69B /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				131B9E202C31354A0090A69B /* Injector.swift */,
+				131B9E222C3136E80090A69B /* DataAssembly.swift */,
+				131B9E262C31375E0090A69B /* DomainAssembly.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
 		13AC162A2C3128EA00E7BA1F = {
 			isa = PBXGroup;
 			children = (
-				131B9E1D2C3132160090A69B /* ANBDCore */,
 				13AC16352C3128EA00E7BA1F /* ANBD */,
 				13AC16462C3128EB00E7BA1F /* ANBDTests */,
 				13AC16342C3128EA00E7BA1F /* Products */,
@@ -188,6 +204,7 @@
 			name = ANBD;
 			packageProductDependencies = (
 				131B9E112C312EF20090A69B /* Swinject */,
+				131B9E282C3138E60090A69B /* ANBDCore */,
 			);
 			productName = ANBD;
 			productReference = 13AC16332C3128EA00E7BA1F /* ANBD.app */;
@@ -231,7 +248,7 @@
 				};
 			};
 			buildConfigurationList = 13AC162E2C3128EA00E7BA1F /* Build configuration list for PBXProject "ANBD" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -257,7 +274,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				131B9E1E2C3132160090A69B /* ANBDCore in Resources */,
 				13AC163B2C3128EB00E7BA1F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,10 +295,13 @@
 				13AC16392C3128EA00E7BA1F /* ContentView.swift in Sources */,
 				13AC16372C3128EA00E7BA1F /* ANBDApp.swift in Sources */,
 				131B9E142C3130150090A69B /* AuthView.swift in Sources */,
+				131B9E232C3136E80090A69B /* DataAssembly.swift in Sources */,
 				131B9E182C3130270090A69B /* TradeView.swift in Sources */,
 				131B9E1A2C3130310090A69B /* ChatView.swift in Sources */,
 				131B9E1C2C31303A0090A69B /* ProfileView.swift in Sources */,
 				131B9E162C31301D0090A69B /* ArticleView.swift in Sources */,
+				131B9E212C31354A0090A69B /* Injector.swift in Sources */,
+				131B9E272C31375E0090A69B /* DomainAssembly.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,6 +607,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 131B9E102C312EF20090A69B /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
+		};
+		131B9E282C3138E60090A69B /* ANBDCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ANBDCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
