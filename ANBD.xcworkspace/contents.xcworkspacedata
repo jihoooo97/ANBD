@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
-   <FileRef
-      location = "group:ANBDCore">
-   </FileRef>
-   <FileRef
-      location = "group:ANBD.xcodeproj">
-   </FileRef>
+   <Group
+      location = "group:Projects"
+      name = "Projects">
+      <FileRef
+         location = "group:ANBDCore/ANBDCore.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:App/ANBD.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:CommonUI/CommonUI.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Presentation/Presentation.xcodeproj">
+      </FileRef>
+   </Group>
 </Workspace>

@@ -1,0 +1,17 @@
+import CommonUI
+import SwiftUI
+
+public struct {{ name }}View: View {
+
+    public init() { }
+    
+    public var body: some View {
+        Text("Hello")
+    }
+
+}
+
+
+#Preview {
+    {{ name }}View()
+}

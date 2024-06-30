@@ -1,0 +1,19 @@
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project.makeModule(
+    name: "{{ name }}",
+    product: .app,
+    infoPlist: .default,
+    resources: ["Resources/**"],
+    dependencies: [
+        .project(
+            target: "{{ ANBD }}Core",
+            path: .relativeToRoot("Projects/{{ name }}Core")
+        ),
+        .project(
+            target: "Presentation",
+            path: .relativeToRoot("Projects/Presentation")
+        )
+    ]
+)
