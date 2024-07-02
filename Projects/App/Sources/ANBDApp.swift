@@ -6,17 +6,22 @@ import Swinject
 struct ANBDApp: App {
     private let injector: Injector
     
+    @ObservedObject private var appCoordinator: AppCoordinator
+    
     init() {
         self.injector = DependencyInjector(container: .init())
         injector.assemble([
             CoreAssembly(),
             PresentationAssembly()
         ])
+        
+        appCoordinator = AppCoordinator(injector: injector, flow: .login)
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            appCoordinator.buildRootScene()
+                .environmentObject(appCoordinator)
         }
     }
 }
