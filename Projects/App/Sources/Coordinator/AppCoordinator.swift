@@ -10,75 +10,43 @@ import Presentation
 import CommonUI
 import SwiftUI
 
-final class AppCoordinator: ObservableObject, Coordinator {
-    
-    @Published var path: NavigationPath
-    @Published var flow: AppFlow = .login
-    
+public final class AppCoordinator: ObservableObject, Coordinator {
+
     private let injector: Injector
+    public var type: AppScene = .app
+    
+    @Published public var path: NavigationPath
     
     
-    public init(injector: Injector, flow: AppFlow) {
-        self.path = NavigationPath()
+    public init(injector: Injector) {
         self.injector = injector
+        self.path = NavigationPath()
     }
 
     
-    public func push(_ scene: AppScene) {
-        path.append(scene)
+    func showLoginFlow() -> some View {
+        return injector.resolve(LoginView.self)
     }
     
-    public func pop() {
-        path.removeLast()
+    func showTabFlow() -> some View {
+        let tabCoordinator = TabCoordinator(injector: injector)
+        return tabCoordinator.buildScene()
     }
     
-    public func popToRoot() {
-        path.removeLast(path.count)
-    }
-    
-    public func buildRootScene() -> some View {
-        return buildScene(flow)
+    public func buildRootScene(_ isLogined: Bool) -> some View {
+        return buildScene(isLogined ? .tab : .login)
     }
     
     @ViewBuilder
-    public func buildScene(_ flow: AppFlow) -> some View {
-        switch flow {
-        case .login:
-            VStack {
-                Text("Login Flow")
-                Button("Change") {
-                    self.flow = .tab
-                }
-            }
+    public func buildScene(_ scene: AppScene) -> some View {
+        switch scene {
         case .tab:
-            TabView {
-                VStack {
-                    Text("a")
-                    Button("Change") {
-                        self.flow = .login
-                    }
-                }
-                .tabItem {
-                    Label("a", systemImage: "globe")
-                }
-                
-                Text("b")
-                    .tabItem {
-                        Label("b", systemImage: "globe")
-                    }
-                
-                Text("c")
-                    .tabItem {
-                        Label("c", systemImage: "globe")
-                    }
-                
-                Text("d")
-                    .tabItem {
-                        Label("d", systemImage: "globe")
-                    }
-            }
+            showTabFlow()
+        case .login:
+            showLoginFlow()
+        default:
+            Text("잘못된 접근")
         }
     }
-    
     
 }

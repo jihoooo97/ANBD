@@ -8,14 +8,9 @@
 
 import SwiftUI
 
-public enum AppFlow: Hashable {
-    case login
-    case tab
-}
-
 public enum AppScene: Hashable {
-    case login, tab
-    case signUp
+    case app, login, tab
+    case signIn, signUp
     case home
     case article, articleDetail
     case trade, tradeDetail
@@ -24,9 +19,26 @@ public enum AppScene: Hashable {
 }
 
 public protocol Coordinator {
-    var path: NavigationPath { get }
+    var path: NavigationPath { get set }
+    var type: AppScene { get }
     
-    func push(_ scene: AppScene)
-    func pop()
-    func popToRoot()
+    mutating func push(_ scene: AppScene)
+    mutating func pop()
+    mutating func popToRoot()
+}
+
+public extension Coordinator {
+    
+    mutating func push(_ scene: AppScene) {
+        path.append(scene)
+    }
+    
+    mutating func pop() {
+        path.removeLast()
+    }
+    
+    mutating func popToRoot() {
+        path.removeLast(path.count)
+    }
+    
 }

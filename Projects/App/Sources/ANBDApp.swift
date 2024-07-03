@@ -1,3 +1,4 @@
+import Presentation
 import CommonUI
 import SwiftUI
 import Swinject
@@ -6,22 +7,22 @@ import Swinject
 struct ANBDApp: App {
     private let injector: Injector
     
+    @AppStorage("isLogined") private var isLogined = false
     @ObservedObject private var appCoordinator: AppCoordinator
     
     init() {
         self.injector = DependencyInjector(container: .init())
+        appCoordinator = AppCoordinator(injector: injector)
+        
         injector.assemble([
             CoreAssembly(),
-            PresentationAssembly()
+            PresentationAssembly(injector: injector)
         ])
-        
-        appCoordinator = AppCoordinator(injector: injector, flow: .login)
     }
 
     var body: some Scene {
         WindowGroup {
-            appCoordinator.buildRootScene()
-                .environmentObject(appCoordinator)
+            appCoordinator.buildRootScene(isLogined)
         }
     }
 }
