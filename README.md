@@ -1,73 +1,49 @@
+![Swift 5.10](https://img.shields.io/badge/Swift-5.10-F05138.svg?style=flat&color=F05138) 
+![Xcode 15.3](https://img.shields.io/badge/Xcode-15.3-147EFB.svg?style=flat&color=147EFB)
+![iOS 15.0+](https://img.shields.io/badge/iOS-15.0+-147EFB.svg?style=flat&color=00E007)
+![Tuist 4.18](https://img.shields.io/badge/Tuist-4.18-147EFB.svg?style=flat&color=6E12CB)
+
 # 🐳 ANBD
 > 사용하지 않는 물건을 교환하거나 나눔하고, 절약 방법을 커뮤니티에 공유하여 환경 보호에 기여할 수 있는 플랫폼  
 [앱스토어](https://apps.apple.com/kr/app/anbd/id6502585089)
 <br>
 
-### 개발 환경 🛠️
+## 개발 환경
 | 버전 | iOS 16.0+ |
 |:-:|:-:|
 | Framework | SwiftUI |
-| 구조 | MVVM-C + Combine + Clean Architecture |
+| 구조 | MVVM-C + Combine |
+| DI | Swinject |
 | BaaS | FirebaseFirestore |
 | Library | Firebase, Kingfisher |
 <br>
 
-### 디렉토리 구조 📁
-<details>
-<summary>더 보기</summary>
+## 프로젝트 빌드
 
-#### ANBD
-```
-ANBD
- ┣ App
- ┃ ┗ ANBDApp.swift
- ┣ Common
- ┃ ┣ Extension
- ┃ ┗ Util
- ┣ Presentaion
- ┃ ┣ ANBDTabView.swift
- ┃ ┣ Authentication
- ┃ ┣ Home
- ┃ ┣ Article
- ┃ ┣ Trade
- ┃ ┣ Chat
- ┃ ┣ Mypage
- ┃ ┣ Report
- ┃ ┣ Search
- ┃ ┗ CommonUI
- ┃   ┣ Button
- ┃   ┣ Picker
- ┃   ┣ Sheet
- ┃   ┣ TextField
- ┃   ┗ View
- ┗ Resource
-   ┣ Assets.xcassets
-   ┣ Colors.xcassets
-   ┣ Font
-   ┗ Secrets.xcconfig
-```
-
-#### ANBD Model 
-```
-Sources
- ┣ Data
- ┃ ┣ DataSource
- ┃ ┣ Database
- ┃ ┗ RepositoryImpl
- ┣ Domain
- ┃ ┣ Model
- ┃ ┣ Repository
- ┃ ┗ Usecase/UsecaseImpl
- ┗ Common
-   ┣ Enum
-   ┣ Error
-   ┣ Extension
-   ┗ Manager
-```
-</details>
+1. mise를 통해 Tuist를 설치한 상태여야합니다. [Tuist 설치 방법](https://docs.tuist.io/guide/introduction/installation.html)
+2. git clone
+3. 프로젝트 경로에서 tuist install
+4. tuist generate
 <br>
 
-### Screen 📱
+## 모듈 구조
+
+![graph](https://github.com/jihoooo97/ANBD/assets/49361214/ded24646-bdf8-4b26-b37b-b847e01307a6)
+
+<br>
+
+- **ANBD**  
+App 모듈 (App, DI, Coordinator)
+- **Presentation**  
+UI관련 모듈 (View, ViewModel)
+- **ANBDCore**  
+서버 통신, 비즈니스 로직, 공통 기능(Enum, Extension, Manager)
+- **CommonUI**  
+앱 전반으로 쓰일 공통 UI 모듈 (ViewModifier, Custom View, UI-Extension, Font · Color Enum)
+
+<br>
+
+## Screen 📱
 <details>
 <summary>더 보기</summary>
  
@@ -108,152 +84,7 @@ Sources
 
 ## Experience
 ### 문제 1.
-중복되는 비즈니스 로직에 대한 처리: 게시글과 거래글 2종류의 Response 타입이 있었는데 타입만 다를 뿐 로직은 거의 동일하여, 공통부분을 프로토콜과 제네릭으로 추상화하고 다른 로직은 extension을 활용하여 중복 코드를 최소화할 수 있었음
 
-- 개선 전
-```swift
-public protocol ArticleDataSource {
-     func createArticle(article: Article) async throws
-     func readArticle(articleID: String) async throws -> Article
-     func readRecentArticle(category: ANBDCategory) async throws -> Article
-     func readArticleList() async throws -> [Article]
-     func refreshAll() async throws -> [Article]
-     func updateArticle(article: Article) async throws
-     func deleteArticle(articleID: String) async throws
-     func resetQuery()
- }
-
-protocol TradeDataSource {
-     func createTrade(trade: Trade) async throws
-     func readTrade(tradeID: String) async throws -> Trade
-     func readTradeList() async throws -> [Trade]
-     func readRecentTradeList(category: ANBDCategory) async throws -> [Trade]
-     func refreshAll() async throws -> [Trade]
-     func updateTrade(trade: Trade) async throws
-     func deleteTrade(tradeID: String) async throws
-     func resetQuery()
- }
-```
-
-- 개선 후
-```swift
-protocol Postable<Item>: AnyObject {
-    associatedtype Item: Codable & Identifiable
-    
-    func createItem(item: Item) async throws
-    func readItem(itemID: String) async throws -> Item
-    func readItemList() async throws -> [Item]
-    func refreshAll() async throws -> [Item]
-    func updateItem(item: Item) async throws
-    func deleteItem(itemID: String) async throws
-    func resetQuery()
-}
-
-extension Postable where Item == Article {
-
-    func readRecentArticle(category: ANBDCategory) async throws -> Article {
-        // ...
-    }
-
-}
-
-extension Postable where Item == Trade {
-
-    func readRecentTradeList(category: ANBDCategory) async throws -> [Trade] {
-        // ...
-    }
-
-}
-```
-
-### 문제 2.
-게시물의 사진 수정 로직: 기존에 게시글 사진 수정 시 모든 사진을 DB에서 지우고 수정한 이미지 배열을 업로드하는 방식으로 구현하였으나 데이터 낭비가 심하다 생각이 들어 사진의 id를 비교하여 추가, 삭제된 것에 대한 처리만 하도록 로직을 수정하였음
-
-- 수정 전
-```swift
-public func updateImageList(
-    path storagePath: StoragePath,
-    containerID: String,
-    imagePaths: [String],
-    imageDatas: [Data]
-) async throws -> [String] {
-    let storageImagePathList = try await storageRef
-        .child(storagePath.rawValue)
-        .child(containerID)
-        .listAll()
-        .items
-        .map { $0.name }
-
-    try await deleteImageList(path: storagePath, containerID: containerID, imagePaths: storageImagePathList)
-    let updatedPath = try await uploadImageList(path: storagePath, containerID: containerID, imageDatas: imageDatas)
-
-    return updatedPath
-}
-```
-
-- 수정 후
-```swift
-public func updateImageList(
-    path storagePath: StoragePath,
-    containerID: String,
-    thumbnailPath: String,
-    addImageList: [Data],
-    deleteList: [String]
-) async throws -> [String] {
-    var storagePathList = try await storageRef
-        .child(storagePath.rawValue)
-        .child(containerID)
-        .listAll()
-        .items
-        .map { $0.name }
-        
-    try await deleteImageList(
-        path: storagePath,
-        containerID: containerID,
-        imagePaths: deleteList
-    )
-        
-    storagePathList = storagePathList.filter { !deleteList.contains($0) }
-        
-    if !addImageList.isEmpty {
-        let newImagePath = try await uploadImageList(
-            path: storagePath,
-            isUpdate: true,
-            containerID: containerID,
-            imageDatas: addImageList
-        )
-            
-        storagePathList += newImagePath
-    }
-        
-    let thumbnailImage = try await downloadImage(
-        path: storagePath,
-        containerID: containerID,
-        imagePath: storagePathList[0]
-    )
-        
-    if let resizedImage = await UIImage(data: thumbnailImage)?
-        .byPreparingThumbnail(ofSize: .init(width: 512, height: 512))?
-        .jpegData(compressionQuality: 1) {
-            
-        try await updateImage(
-            path: storagePath,
-            containerID: "\(containerID)/thumbnail",
-            imagePath: thumbnailPath,
-            imageData: resizedImage
-        )
-    }
-        
-    return storagePathList
-}
-```
-<br>
-
-
-### Developers 👨🏻‍💻👩🏻‍💻
-| <img src="https://avatars.githubusercontent.com/u/80569323?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/103730885?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/72730841?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/100953349?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/49361214?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/90377826?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/37467592?v=4" width="120"> |
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|[**최주리**](https://github.com/juri123123) <br> **PM**, Trade |[**김기표**](https://github.com/rlvy0513) <br> Article|[**김성민**](https://github.com/marukim365) <br> 로그인 · 회원가입 <br> 마이페이지|[**심상원**](https://github.com/Upcircle2) <br> 관리자 App|[**유지호**](https://github.com/jihoooo97) <br> 모델|[**정운관**](https://github.com/UnGwan) <br> 모델, Chat|[**최정인**](https://github.com/choijungp) <br> Home, Chat|
 <br>
 
 ### License 🐟 
