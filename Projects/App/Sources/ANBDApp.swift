@@ -5,24 +5,35 @@ import Swinject
 
 @main
 struct ANBDApp: App {
-    private let injector: Injector
+    private let injector: Injector = DependencyInjector(container: .init())
     
     @AppStorage("isLogined") private var isLogined = false
-    @ObservedObject private var appCoordinator: AppCoordinator
+    
+    @ObservedObject private var appCoordinator = AppCoordinator()
     
     init() {
-        self.injector = DependencyInjector(container: .init())
-        appCoordinator = AppCoordinator(injector: injector)
-        
         injector.assemble([
             CoreAssembly(),
-            PresentationAssembly(injector: injector)
+            PresentationAssembly(coordinator: appCoordinator)
         ])
+        
+        appCoordinator.injector = injector
     }
 
     var body: some Scene {
         WindowGroup {
-            appCoordinator.buildRootScene(isLogined)
+            NavigationStack(path: $appCoordinator.path) {
+                appCoordinator.buildRootScene(isLogined)
+                    .navigationDestination(for: AppScene.self) { scene in
+                        appCoordinator.buildScene(scene)
+                            .environmentObject(injector.resolve(SignUpViewModel.self))
+                    }
+                    .sheet(item: $appCoordinator.sheet) { scene in
+                        appCoordinator.buildScene(scene)
+                    }
+            }
         }
     }
 }
+
+

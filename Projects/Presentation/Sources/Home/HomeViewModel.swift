@@ -10,10 +10,10 @@ import Foundation
 
 public final class HomeViewModel: ObservableObject {
     
-    @Published public var coordinator: HomeCoordinator
+//    @Published public var coordinator: HomeCoordinator
     
-    public init(coordinator: HomeCoordinator) {
-        self.coordinator = coordinator
+    public init() {
+        
     }
     
 }

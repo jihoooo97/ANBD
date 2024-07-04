@@ -17,16 +17,11 @@ public struct HomeView: View {
     }
     
     public var body: some View {
-        NavigationStack(path: $viewModel.coordinator.path) {
-            VStack {
-                Text("Hello, Home!")
-                
-                Button("Logout") {
-                    UserDefaults.standard.set(false, forKey: "isLogined")
-                }
-            }
-            .navigationDestination(for: AppScene.self) { scene in
-                viewModel.coordinator.buildScene(scene)
+        VStack {
+            Text("Hello, Home!")
+            
+            Button("Logout") {
+                UserDefaults.standard.set(false, forKey: "isLogined")
             }
         }
     }

@@ -7,17 +7,16 @@
 //
 
 import Presentation
-import CommonUI
+import Foundation
 import Swinject
 
 struct PresentationAssembly: Assembly {
     
-    let injector: Injector
+    let coordinator: Coordinator
     
     func assemble(container: Container) {
         // MARK: Login
         container.register(LoginViewModel.self) { _ in
-            let coordinator = LoginCoordinator(injector: injector)
             return LoginViewModel(coordinator: coordinator)
         }
         
@@ -26,15 +25,42 @@ struct PresentationAssembly: Assembly {
             return LoginView(viewModel: viewModel)
         }
         
-        container.register(SignUpView.self) { _ in
-            return SignUpView()
+        
+        // MARK: SignUp
+        container.register(SignUpViewModel.self) { _ in
+            return SignUpViewModel(coordinator: coordinator)
+        }
+        
+        container.register(SignUpEmailView.self) { _ in
+            return SignUpEmailView()
+        }
+        
+        container.register(SignUpPasswordView.self) { _ in
+            return SignUpPasswordView()
+        }
+        
+        container.register(SignUpNicknameView.self) { _ in
+            return SignUpNicknameView()
+        }
+        
+        container.register(SignUpTermsView.self) { _ in
+            return SignUpTermsView()
+        }
+        
+        container.register(TermsDetailView.self) { (_, type: TermsType) in
+            return TermsDetailView(type: type)
+        }
+        
+        // MARK: TabView
+        container.register(ANBDTabView.self) { resolver in
+            let homeView = resolver.resolve(HomeView.self)!
+            return ANBDTabView(homeView: homeView)
         }
         
         
         // MARK: Home
         container.register(HomeViewModel.self) { resolver in
-            let coordinator = HomeCoordinator(injector: injector)
-            return HomeViewModel(coordinator: coordinator)
+            return HomeViewModel()
         }
         
         container.register(HomeView.self) { resolver in

@@ -11,27 +11,16 @@ import CommonUI
 import SwiftUI
 
 public final class AppCoordinator: ObservableObject, Coordinator {
-
-    private let injector: Injector
-    public var type: AppScene = .app
+    
+    var injector: Injector?
     
     @Published public var path: NavigationPath
+    @Published public var sheet: AppScene?
     
-    
-    public init(injector: Injector) {
-        self.injector = injector
+    public init() {
         self.path = NavigationPath()
     }
-
     
-    func showLoginFlow() -> some View {
-        return injector.resolve(LoginView.self)
-    }
-    
-    func showTabFlow() -> some View {
-        let tabCoordinator = TabCoordinator(injector: injector)
-        return tabCoordinator.buildScene()
-    }
     
     public func buildRootScene(_ isLogined: Bool) -> some View {
         return buildScene(isLogined ? .tab : .login)
@@ -40,10 +29,20 @@ public final class AppCoordinator: ObservableObject, Coordinator {
     @ViewBuilder
     public func buildScene(_ scene: AppScene) -> some View {
         switch scene {
-        case .tab:
-            showTabFlow()
         case .login:
-            showLoginFlow()
+            injector?.resolve(LoginView.self)
+        case .signUpEmail:
+            injector?.resolve(SignUpEmailView.self)
+        case .signUpPassword:
+            injector?.resolve(SignUpPasswordView.self)
+        case .signUpNickname:
+            injector?.resolve(SignUpNicknameView.self)
+        case .signUpTerms:
+            injector?.resolve(SignUpTermsView.self)
+        case .tab:
+            injector?.resolve(ANBDTabView.self)
+        case .termsDetail(let type):
+            injector?.resolve(TermsDetailView.self, argument: type)
         default:
             Text("잘못된 접근")
         }
