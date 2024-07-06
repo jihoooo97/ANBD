@@ -1,33 +1,33 @@
 //
-//  AppCoordinator.swift
-//  ANBD
+//  LoginCoordinator.swift
+//  Presentation
 //
-//  Created by 유지호 on 7/1/24.
+//  Created by 유지호 on 7/6/24.
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
-import Presentation
 import CommonUI
 import SwiftUI
 
-public final class AppCoordinator: ObservableObject, Coordinator {
+public final class LoginCoordinator: Coordinator {
+
+    public typealias S = AuthScene
     
-    var injector: Injector?
+    public var injector: Injector?
     
-    @Published public var path: NavigationPath
-    @Published public var sheet: AppScene?
-    
-    public init() {
-        self.path = NavigationPath()
-    }
+    @Published public var path: NavigationPath = .init()
+    @Published public var sheet: AuthScene?
     
     
-    public func buildRootScene(_ isLogined: Bool) -> some View {
-        return buildScene(isLogined ? .tab : .login)
+    public init() { }
+    
+    
+    public func buildRootScene(_ scene: AuthScene) -> some View {
+        return buildScene(scene)
     }
     
     @ViewBuilder
-    public func buildScene(_ scene: AppScene) -> some View {
+    public func buildScene(_ scene: AuthScene) -> some View {
         switch scene {
         case .login:
             injector?.resolve(LoginView.self)
@@ -39,12 +39,8 @@ public final class AppCoordinator: ObservableObject, Coordinator {
             injector?.resolve(SignUpNicknameView.self)
         case .signUpTerms:
             injector?.resolve(SignUpTermsView.self)
-        case .tab:
-            injector?.resolve(ANBDTabView.self)
         case .termsDetail(let type):
             injector?.resolve(TermsDetailView.self, argument: type)
-        default:
-            Text("잘못된 접근")
         }
     }
     

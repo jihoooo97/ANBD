@@ -8,12 +8,10 @@
 
 import Foundation
 
-public final class HomeViewModel: ObservableObject {
+public final class HomeViewModel: BaseViewModel<TabCoordinator> {
     
-//    @Published public var coordinator: HomeCoordinator
-    
-    public init() {
-        
+    public override init(coordinator: TabCoordinator) {
+        super.init(coordinator: coordinator)
     }
     
 }

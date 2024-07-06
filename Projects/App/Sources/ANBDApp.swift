@@ -9,28 +9,40 @@ struct ANBDApp: App {
     
     @AppStorage("isLogined") private var isLogined = false
     
-    @ObservedObject private var appCoordinator = AppCoordinator()
+    @ObservedObject private var loginCoordinator = LoginCoordinator()
+    @ObservedObject private var tabCoordinator = TabCoordinator()
     
     init() {
         injector.assemble([
             CoreAssembly(),
-            PresentationAssembly(coordinator: appCoordinator)
+            PresentationAssembly(
+                loginCoordinator: loginCoordinator,
+                tabCoordinator: tabCoordinator
+            )
         ])
         
-        appCoordinator.injector = injector
+        loginCoordinator.injector = injector
+        tabCoordinator.injector = injector
     }
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $appCoordinator.path) {
-                appCoordinator.buildRootScene(isLogined)
-                    .navigationDestination(for: AppScene.self) { scene in
-                        appCoordinator.buildScene(scene)
-                            .environmentObject(injector.resolve(SignUpViewModel.self))
+            if isLogined {
+                tabCoordinator.buildScene(.tab)
+                    .sheet(item: $tabCoordinator.sheet) { scene in
+                        tabCoordinator.buildScene(scene)
                     }
-                    .sheet(item: $appCoordinator.sheet) { scene in
-                        appCoordinator.buildScene(scene)
-                    }
+            } else {
+                NavigationStack(path: $loginCoordinator.path) {
+                    loginCoordinator.buildScene(.login)
+                        .navigationDestination(for: AuthScene.self) { scene in
+                            loginCoordinator.buildScene(scene)
+                                .environmentObject(injector.resolve(SignUpViewModel.self))
+                        }
+                        .sheet(item: $loginCoordinator.sheet) { scene in
+                            loginCoordinator.buildScene(scene)
+                        }
+                }
             }
         }
     }

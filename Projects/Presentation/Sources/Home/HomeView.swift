@@ -20,6 +20,10 @@ public struct HomeView: View {
         VStack {
             Text("Hello, Home!")
             
+            Button("Push") {
+                viewModel.push(.profile)
+            }
+            
             Button("Logout") {
                 UserDefaults.standard.set(false, forKey: "isLogined")
             }

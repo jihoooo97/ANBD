@@ -8,31 +8,28 @@
 
 import SwiftUI
 
-public enum AppScene: Identifiable, Hashable {
-    case login, tab
-    case signUpEmail, signUpPassword, signUpNickname, signUpTerms
-    case home
-    case article, articleDetail
-    case trade, tradeDetail
-    case chatList, chatRoom
-    case profile
-    case termsDetail(TermsType)
-    
-    public var id: String { "\(self)" }
+public enum CoordinatorType {
+    case app
+    case tab
 }
 
-public protocol Coordinator: AnyObject {
-    var path: NavigationPath { get set }
-    var sheet: AppScene? { get set }
+public protocol Coordinator: ObservableObject {
+    associatedtype S: Sceneable
     
-    func push(_ scene: AppScene)
+    var path: NavigationPath { get set }
+    var sheet: S? { get set }
+    
+    func push(_ scene: S)
     func pop()
     func popToRoot()
+    func present(_ scene: S)
+    func dismiss()
 }
+
 
 public extension Coordinator {
     
-    func push(_ scene: AppScene) {
+    func push(_ scene: S) {
         path.append(scene)
     }
     
@@ -44,12 +41,12 @@ public extension Coordinator {
         path.removeLast(path.count)
     }
     
-    func present(sheet: AppScene) {
-        self.sheet = sheet
+    func present(_ scene: S) {
+        sheet = scene
     }
     
     func dismiss() {
-        self.sheet = nil
+        sheet = nil
     }
     
 }

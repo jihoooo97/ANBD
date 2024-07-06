@@ -9,20 +9,20 @@
 import Foundation
 import Combine
 
-public class BaseViewModel: ObservableObject {
+public class BaseViewModel<C: Coordinator>: ObservableObject {
     
-    weak var coordinator: Coordinator?
+    weak var coordinator: C?
     
     var cancellables = Set<AnyCancellable>()
     
     
-    public init(coordinator: Coordinator) {
+    public init(coordinator: C) {
         self.coordinator = coordinator
     }
     
     
     // MARK: Coordinate
-    public func push(_ scene: AppScene) {
+    public func push(_ scene: C.S) {
         coordinator?.push(scene)
     }
     
@@ -34,8 +34,8 @@ public class BaseViewModel: ObservableObject {
         coordinator?.popToRoot()
     }
     
-    public func present(_ scene: AppScene) {
-        coordinator?.present(sheet: scene)
+    public func present(_ scene: C.S) {
+        coordinator?.present(scene)
     }
     
     public func dismiss() {

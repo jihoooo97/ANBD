@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import SafariServices
 
 public struct TermsDetailView: View {
     private let type: TermsType
@@ -22,20 +21,5 @@ public struct TermsDetailView: View {
         } else {
             Text("잘못된 URL입니다.")
         }
-    }
-}
-
-struct SafariView: UIViewControllerRepresentable {
-    let url: URL
-
-    func makeUIViewController(context: UIViewControllerRepresentableContext<SafariView>) -> SFSafariViewController {
-        return SFSafariViewController(url: url)
-    }
-
-    func updateUIViewController(
-        _ uiViewController: SFSafariViewController,
-        context: UIViewControllerRepresentableContext<SafariView>
-    ) {
-
     }
 }

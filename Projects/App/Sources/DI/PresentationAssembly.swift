@@ -7,17 +7,18 @@
 //
 
 import Presentation
-import Foundation
+import CommonUI
 import Swinject
 
 struct PresentationAssembly: Assembly {
     
-    let coordinator: Coordinator
+    let loginCoordinator: LoginCoordinator
+    let tabCoordinator: TabCoordinator
     
     func assemble(container: Container) {
         // MARK: Login
         container.register(LoginViewModel.self) { _ in
-            return LoginViewModel(coordinator: coordinator)
+            return LoginViewModel(coordinator: loginCoordinator)
         }
         
         container.register(LoginView.self) { resolver in
@@ -28,7 +29,7 @@ struct PresentationAssembly: Assembly {
         
         // MARK: SignUp
         container.register(SignUpViewModel.self) { _ in
-            return SignUpViewModel(coordinator: coordinator)
+            return SignUpViewModel(coordinator: loginCoordinator)
         }
         
         container.register(SignUpEmailView.self) { _ in
@@ -51,16 +52,20 @@ struct PresentationAssembly: Assembly {
             return TermsDetailView(type: type)
         }
         
+        
         // MARK: TabView
         container.register(ANBDTabView.self) { resolver in
             let homeView = resolver.resolve(HomeView.self)!
-            return ANBDTabView(homeView: homeView)
+            return ANBDTabView(
+                coordinator: tabCoordinator,
+                homeView: homeView
+            )
         }
         
         
         // MARK: Home
         container.register(HomeViewModel.self) { resolver in
-            return HomeViewModel()
+            return HomeViewModel(coordinator: tabCoordinator)
         }
         
         container.register(HomeView.self) { resolver in

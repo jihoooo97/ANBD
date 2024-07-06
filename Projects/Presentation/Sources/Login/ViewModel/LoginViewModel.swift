@@ -10,7 +10,7 @@ import ANBDCore
 import Foundation
 import Combine
 
-public final class LoginViewModel: BaseViewModel {
+public final class LoginViewModel: BaseViewModel<LoginCoordinator> {
     
     @Published var email: String = ""
     @Published private(set) var emailDebounced: String = ""
@@ -21,7 +21,7 @@ public final class LoginViewModel: BaseViewModel {
     @Published private(set) var validationState: AuthFieldState = .empty
     
     
-    public override init(coordinator: Coordinator) {
+    public override init(coordinator: LoginCoordinator) {
         super.init(coordinator: coordinator)
         
         $email
@@ -49,7 +49,7 @@ public final class LoginViewModel: BaseViewModel {
     }
     
     
-    func validate(email: String, password: String) {
+    private func validate(email: String, password: String) {
         if (!email.isEmpty && !email.isValidateEmail()) && (!password.isEmpty && !password.isValidatePassword()) {
             validationState = .invalidBoth
         } else if !email.isEmpty && !email.isValidateEmail() {

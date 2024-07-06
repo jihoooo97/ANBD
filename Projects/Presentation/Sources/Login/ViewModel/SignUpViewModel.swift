@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public final class SignUpViewModel: BaseViewModel {
+public final class SignUpViewModel: BaseViewModel<LoginCoordinator> {
     
     @Published var email: String = ""
     @Published private(set) var emailDebounced: String = ""
@@ -23,7 +23,7 @@ public final class SignUpViewModel: BaseViewModel {
     @Published private(set) var validationState: AuthFieldState = .empty
     
     
-    public override init(coordinator: Coordinator) {
+    public override init(coordinator: LoginCoordinator) {
         super.init(coordinator: coordinator)
         
         $email
@@ -55,8 +55,8 @@ public final class SignUpViewModel: BaseViewModel {
     }
     
     
-    func validate(_ type: FieldType, text: String) {
-        let isValidateField = 
+    private func validate(_ type: FieldType, text: String) {
+        let isValidateField =
         switch type {
         case .email:
             text.isValidateEmail()
@@ -73,20 +73,20 @@ public final class SignUpViewModel: BaseViewModel {
         } else {
             validationState = .success
         }
-        
     }
     
-    enum FieldType {
-        case email
-        case password
-        case nickname
-        
-        var invalidState: AuthFieldState {
-            switch self {
-            case .email:    .invalidEmail
-            case .password: .invalidPassword
-            case .nickname: .invalidNickname
-            }
+}
+
+fileprivate enum FieldType {
+    case email
+    case password
+    case nickname
+    
+    var invalidState: AuthFieldState {
+        switch self {
+        case .email:    .invalidEmail
+        case .password: .invalidPassword
+        case .nickname: .invalidNickname
         }
     }
 }
