@@ -52,10 +52,19 @@ public final class TabCoordinator: Coordinator {
             injector?.resolve(ANBDTabView.self)
         case .home:
             injector?.resolve(HomeView.self)
+        case .article(let category):
+            injector?.resolve(ArticleView.self, arg: category)
+                .navigationTitle(category.name)
+                .toolbar(.hidden, for: .tabBar)
+        case .articleDetail(let id):
+            injector?.resolve(ArticleDetailView.self, arg: id)
+                .navigationTitle("정보 공유")
+                .toolbar(.hidden, for: .tabBar)
+        case .articleEdit(let isEditMode, let category, let article):
+            injector?.resolve(ArticleEditView.self, arg1: isEditMode, arg2: category, arg3: article)
         default:
-            Text("TabScene")
-//            case .article:
-//                <#code#>
+            Text("\(scene)")
+                .toolbar(.hidden, for: .tabBar)
 //            case .articleDetail:
 //                <#code#>
 //            case .trade:

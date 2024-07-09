@@ -6,6 +6,7 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
+import ANBDCore
 import Presentation
 import CommonUI
 import Swinject
@@ -56,9 +57,12 @@ struct PresentationAssembly: Assembly {
         // MARK: TabView
         container.register(ANBDTabView.self) { resolver in
             let homeView = resolver.resolve(HomeView.self)!
+            let articleView = resolver.resolve(ArticleView.self, argument: ArticleCategory.accua)!
+            
             return ANBDTabView(
                 coordinator: tabCoordinator,
-                homeView: homeView
+                homeView: homeView,
+                articleView: articleView
             )
         }
         
@@ -71,6 +75,24 @@ struct PresentationAssembly: Assembly {
         container.register(HomeView.self) { resolver in
             let viewModel = resolver.resolve(HomeViewModel.self)!
             return HomeView(viewModel: viewModel)
+        }
+        
+        // MARK: Article
+        container.register(ArticleViewModel.self) { resolver in
+            return ArticleViewModel(coordinator: tabCoordinator)
+        }
+        
+        container.register(ArticleView.self) { (resolver, category: ArticleCategory) in
+            let viewModel = resolver.resolve(ArticleViewModel.self)!
+            return ArticleView(viewModel: viewModel, category)
+        }
+        
+        container.register(ArticleDetailView.self) { (resolver, id: String) in
+            return ArticleDetailView(articleID: id)
+        }
+        
+        container.register(ArticleEditView.self) { (resolver, isEditMode: Bool, selection: ArticleCategory, article: String?) in
+            return ArticleEditView(isEditMode: isEditMode, selection, article: article)
         }
     }
     

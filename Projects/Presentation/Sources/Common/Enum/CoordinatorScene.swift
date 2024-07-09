@@ -6,6 +6,8 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
+import ANBDCore
+
 public typealias Sceneable = Identifiable & Hashable
 
 public enum AuthScene: Sceneable {
@@ -22,8 +24,14 @@ public enum AuthScene: Sceneable {
 public enum TabScene: Sceneable {
     case tab
     case home
-    case article, articleDetail
-    case trade, tradeDetail
+    
+    case article(ArticleCategory)
+    case articleDetail(id: String)
+    case articleEdit(Bool, ArticleCategory, String?)
+    
+    case trade(TradeCategory)
+    case tradeDetail
+    
     case chatList, chatRoom
     case profile
     

@@ -13,13 +13,16 @@ public struct ANBDTabView: View {
     @ObservedObject private var coordinator: TabCoordinator
     
     private let homeView: HomeView
+    private let articleView: ArticleView
     
     public init(
         coordinator: TabCoordinator,
-        homeView: HomeView
+        homeView: HomeView,
+        articleView: ArticleView
     ) {
         self.coordinator = coordinator
         self.homeView = homeView
+        self.articleView = articleView
     }
     
     public var body: some View {
@@ -32,6 +35,17 @@ public struct ANBDTabView: View {
                     }
             }
             .tabItem(of: .home)
+            
+            NavigationStack(path: $coordinator.articlePath) {
+                articleView
+                    .navigationTitle("정보 공유")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(for: TabScene.self) { scene in
+                        coordinator.buildScene(scene)
+                            .toolbarRole(.editor)
+                    }
+            }
+            .tabItem(of: .article)
         }
     }
 }

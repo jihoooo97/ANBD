@@ -40,7 +40,7 @@ public final class LoginCoordinator: Coordinator {
         case .signUpTerms:
             injector?.resolve(SignUpTermsView.self)
         case .termsDetail(let type):
-            injector?.resolve(TermsDetailView.self, argument: type)
+            injector?.resolve(TermsDetailView.self, arg: type)
         }
     }
     
