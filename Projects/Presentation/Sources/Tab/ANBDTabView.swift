@@ -14,15 +14,18 @@ public struct ANBDTabView: View {
     
     private let homeView: HomeView
     private let articleView: ArticleView
+    private let tradeView: TradeView
     
     public init(
         coordinator: TabCoordinator,
         homeView: HomeView,
-        articleView: ArticleView
+        articleView: ArticleView,
+        tradeView: TradeView
     ) {
         self.coordinator = coordinator
         self.homeView = homeView
         self.articleView = articleView
+        self.tradeView = tradeView
     }
     
     public var body: some View {
@@ -46,6 +49,17 @@ public struct ANBDTabView: View {
                     }
             }
             .tabItem(of: .article)
+            
+            NavigationStack(path: $coordinator.tradePath) {
+                tradeView
+                    .navigationTitle("나눔 거래")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(for: TabScene.self) { scene in
+                        coordinator.buildScene(scene)
+                            .toolbarRole(.editor)
+                    }
+            }
+            .tabItem(of: .trade)
         }
     }
 }

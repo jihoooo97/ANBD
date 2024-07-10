@@ -58,11 +58,13 @@ struct PresentationAssembly: Assembly {
         container.register(ANBDTabView.self) { resolver in
             let homeView = resolver.resolve(HomeView.self)!
             let articleView = resolver.resolve(ArticleView.self, argument: ArticleCategory.accua)!
+            let tradeView = resolver.resolve(TradeView.self, argument: TradeCategory.nanua)!
             
             return ANBDTabView(
                 coordinator: tabCoordinator,
                 homeView: homeView,
-                articleView: articleView
+                articleView: articleView,
+                tradeView: tradeView
             )
         }
         
@@ -76,6 +78,7 @@ struct PresentationAssembly: Assembly {
             let viewModel = resolver.resolve(HomeViewModel.self)!
             return HomeView(viewModel: viewModel)
         }
+        
         
         // MARK: Article
         container.register(ArticleViewModel.self) { resolver in
@@ -98,6 +101,17 @@ struct PresentationAssembly: Assembly {
         
         container.register(ArticleEditView.self) { (resolver, isEditMode: Bool, selection: ArticleCategory, article: String?) in
             return ArticleEditView(isEditMode: isEditMode, selection, article: article)
+        }
+        
+        
+        // MARK: Trade
+        container.register(TradeViewModel.self) { resolver in
+            return TradeViewModel(coordinator: tabCoordinator)
+        }
+        
+        container.register(TradeView.self) { (resolver, category: TradeCategory) in
+            let viewModel = resolver.resolve(TradeViewModel.self)!
+            return TradeView(viewModel: viewModel, category)
         }
     }
     
