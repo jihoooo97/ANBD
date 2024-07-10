@@ -14,9 +14,6 @@ let project = Project.makeModule(
         .project(
             target: "Presentation",
             path: .relativeToRoot("Projects/Presentation")
-        ),
-        .external(name: "Swinject"),
-        .external(name: "FirebaseAuth"),
-        .external(name: "FirebaseMessaging")
+        )
     ]
 )

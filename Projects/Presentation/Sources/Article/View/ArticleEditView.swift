@@ -48,6 +48,7 @@ public struct ArticleEditView: View {
                 Button("완료") {
                     
                 }
+                .disabled(title.isEmpty || content.isEmpty)
             }
             .frame(height: 44)
             
@@ -66,16 +67,19 @@ public struct ArticleEditView: View {
                 }
             
             TextField("제목을 입력하세요", text: $title)
+                .anbdFont(.heading3)
             
             Divider()
             
             TextEditor(text: $content)
+                .anbdFont(.body1)
                 .padding(.horizontal, -4)
                 .opacity(content.isEmpty ? 0.8 : 1)
                 .background(alignment: .leading) {
                     if content.isEmpty {
                         VStack {
-                            Text("내용을 입력하세요")
+                            Text("ANBD 이용자들을 위해 여러분들의 아껴쓰기/다시쓰기 Tip을 전수해주세요!")
+                                .anbdFont(.body1)
                                 .padding(.horizontal, 1)
                                 .padding(.top, 8)
                             

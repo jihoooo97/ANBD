@@ -15,7 +15,7 @@ public extension Project {
         packages: [Package] = []
     ) -> Project {
         let settings: Settings = .settings(
-            base: [:],
+            base: ["OTHER_LDFLAGS": "$(inherited) -ObjC"],
             configurations: [
                 .debug(name: .debug),
                 .release(name: .release)

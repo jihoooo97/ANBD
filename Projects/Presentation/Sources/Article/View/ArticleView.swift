@@ -10,12 +10,12 @@ import ANBDCore
 import SwiftUI
 
 public struct ArticleView: View {
-    @ObservedObject private var viewModel: ArticleViewModel
+    @StateObject private var viewModel: ArticleViewModel
     
     @State private var selectedCategory: ArticleCategory = .accua
     
     public init(viewModel: ArticleViewModel, _ category: ArticleCategory) {
-        self.viewModel = viewModel
+        self._viewModel = StateObject(wrappedValue: viewModel)
         self.selectedCategory = category
     }
     
@@ -28,6 +28,7 @@ public struct ArticleView: View {
                             selectedCategory = category
                         }
                         .frame(maxWidth: .infinity)
+                        .anbdFont(.subtitle1)
                         .foregroundStyle(selectedCategory == category ? Color.g900 : .g400)
                         .disabled(selectedCategory == category)
                         
@@ -44,11 +45,11 @@ public struct ArticleView: View {
             TabView(selection: $selectedCategory) {
                 ScrollView {
                     LazyVStack {
-                        ForEach(viewModel.articleList, id: \.self) { article in
+                        ForEach(viewModel.accuaList) { article in
                             ArticleListCell(article: article)
                                 .contentShape(.rect)
                                 .onTapGesture {
-                                    viewModel.push(.articleDetail(id: article))
+                                    viewModel.push(.articleDetail(article))
                                 }
                         }
                     }
@@ -58,8 +59,12 @@ public struct ArticleView: View {
                 
                 ScrollView {
                     LazyVStack {
-                        ForEach(viewModel.tradeList, id: \.self) { trade in
-                            Text(trade)
+                        ForEach(viewModel.dasiList) { article in
+                            ArticleListCell(article: article)
+                                .contentShape(.rect)
+                                .onTapGesture {
+                                    viewModel.push(.articleDetail(article))
+                                }
                         }
                     }
                     .padding()
@@ -71,11 +76,23 @@ public struct ArticleView: View {
             .animation(.smooth, value: selectedCategory)
         }
         .overlay(alignment: .bottomTrailing) {
-            Button("글쓰기") {
+            Button {
                 viewModel.present(.articleEdit(false, selectedCategory, nil))
+            } label: {
+                Image(systemName: "pencil")
+                    .anbdFont(.subtitle1)
+                    .foregroundStyle(.white)
+                    .padding()
             }
-            .buttonStyle(BorderedProminentButtonStyle())
+            .background(Color.accentColor)
+            .clipShape(.circle)
+            .shadow(radius: 4)
             .padding()
+        }
+        .task {
+            guard viewModel.accuaList.isEmpty && viewModel.dasiList.isEmpty else { return }
+            await viewModel.fetchArticleList(category: .accua)
+            await viewModel.fetchArticleList(category: .dasi)
         }
     }
 }
