@@ -56,8 +56,8 @@ public final class TabCoordinator: Coordinator {
             injector?.resolve(ArticleView.self, arg: category)
                 .navigationTitle(category.name)
                 .toolbar(.hidden, for: .tabBar)
-        case .articleDetail(let id):
-            injector?.resolve(ArticleDetailView.self, arg: id)
+        case .articleDetail(let article):
+            injector?.resolve(ArticleDetailView.self, arg: article)
                 .navigationTitle("정보 공유")
                 .toolbar(.hidden, for: .tabBar)
         case .articleEdit(let isEditMode, let category, let article):

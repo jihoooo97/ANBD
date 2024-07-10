@@ -8,7 +8,7 @@
 
 import ANBDCore
 import Presentation
-import CommonUI
+
 import Swinject
 
 struct PresentationAssembly: Assembly {
@@ -87,8 +87,13 @@ struct PresentationAssembly: Assembly {
             return ArticleView(viewModel: viewModel, category)
         }
         
-        container.register(ArticleDetailView.self) { (resolver, id: String) in
-            return ArticleDetailView(articleID: id)
+        container.register(ArticleDetailViewModel.self) { (resolver, article: Article) in
+            return ArticleDetailViewModel(coordinator: tabCoordinator, article: article)
+        }
+        
+        container.register(ArticleDetailView.self) { (resolver, article: Article) in
+            let viewModel = resolver.resolve(ArticleDetailViewModel.self, argument: article)!
+            return ArticleDetailView(viewModel: viewModel)
         }
         
         container.register(ArticleEditView.self) { (resolver, isEditMode: Bool, selection: ArticleCategory, article: String?) in

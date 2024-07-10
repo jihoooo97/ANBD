@@ -1,12 +1,15 @@
+import ANBDCore
 import Presentation
 import CommonUI
 import SwiftUI
-import Swinject
+
+import FirebaseCore
 
 @main
 struct ANBDApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     private let injector: Injector = DependencyInjector(container: .init())
-    
+
     @AppStorage("isLogined") private var isLogined = false
     
     @ObservedObject private var loginCoordinator = LoginCoordinator()

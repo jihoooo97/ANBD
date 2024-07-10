@@ -7,6 +7,8 @@
 //
 
 import ANBDCore
+import CommonUI
+
 import SwiftUI
 
 public struct ArticleView: View {
@@ -21,26 +23,8 @@ public struct ArticleView: View {
     
     public var body: some View {
         VStack(spacing: 4) {
-            HStack(alignment: .top) {
-                ForEach(ArticleCategory.allCases) { category in
-                    VStack {
-                        Button(category.name) {
-                            selectedCategory = category
-                        }
-                        .frame(maxWidth: .infinity)
-                        .anbdFont(.subtitle1)
-                        .foregroundStyle(selectedCategory == category ? Color.g900 : .g400)
-                        .disabled(selectedCategory == category)
-                        
-                        if selectedCategory == category {
-                            RoundedRectangle(cornerRadius: 2)
-                                .frame(height: 2)
-                                .foregroundStyle(Color.accentColor)
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal)
+            CategoryHeader(selection: $selectedCategory)
+                .padding(.horizontal)
             
             TabView(selection: $selectedCategory) {
                 ScrollView {

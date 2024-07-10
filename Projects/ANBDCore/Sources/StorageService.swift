@@ -12,6 +12,7 @@ import FirebaseStorage
 public protocol StorageServiceInterface {
     func uploadImage(path: StoragePath, id: String, image: Data) async throws -> String
     func downloadImage(path: StoragePath, id: String, imageName: String) async throws -> URL
+    func downloadImageList(path: StoragePath, id: String) async throws -> [URL]
 }
 
 public final class StorageService: StorageServiceInterface {
@@ -58,6 +59,28 @@ public final class StorageService: StorageServiceInterface {
         else { throw StorageError.downloadError }
         
         return url
+    }
+    
+    public func downloadImageList(
+        path: StoragePath,
+        id: String
+    ) async throws -> [URL] {
+        if id.isEmpty { throw StorageError.emptyID }
+        
+        var urls: [URL] = []
+        
+        let images = try await storage
+            .child(path.name)
+            .child(id)
+            .listAll()
+            .items
+        
+        for image in images {
+            let url = try await image.downloadURL()
+            urls.append(url)
+        }
+                
+        return urls
     }
     
 }

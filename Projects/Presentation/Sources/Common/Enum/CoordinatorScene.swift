@@ -26,7 +26,7 @@ public enum TabScene: Sceneable {
     case home
     
     case article(ArticleCategory)
-    case articleDetail(id: String)
+    case articleDetail(Article)
     case articleEdit(Bool, ArticleCategory, String?)
     
     case trade(TradeCategory)

@@ -8,7 +8,10 @@
 
 import Foundation
 
-public typealias Categorial = Codable & Hashable & Identifiable
+public protocol Categorial: Codable, Hashable, Identifiable {
+    var name: String { get }
+    var id: String { get }
+}
 
 public enum ANBDCategory: Categorial {
     case article(ArticleCategory)
