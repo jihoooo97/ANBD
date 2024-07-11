@@ -33,7 +33,7 @@ public struct TradeView: View {
                             TradeListCell(trade: trade)
                                 .contentShape(.rect)
                                 .onTapGesture {
-//                                    viewModel.push(.articleDetail(article))
+                                    viewModel.push(.tradeDetail(trade))
                                 }
                         }
                     }
@@ -47,7 +47,7 @@ public struct TradeView: View {
                             TradeListCell(trade: trade)
                                 .contentShape(.rect)
                                 .onTapGesture {
-//                                    viewModel.push(.articleDetail(article))
+                                    viewModel.push(.tradeDetail(trade))
                                 }
                         }
                     }
@@ -61,7 +61,7 @@ public struct TradeView: View {
         }
         .overlay(alignment: .bottomTrailing) {
             Button {
-//                viewModel.present(.articleEdit(false, selectedCategory, nil))
+                viewModel.present(.tradeEdit(selectedCategory, nil))
             } label: {
                 Image(systemName: "pencil")
                     .anbdFont(.subtitle1)

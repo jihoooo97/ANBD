@@ -62,6 +62,14 @@ public final class TabCoordinator: Coordinator {
                 .toolbar(.hidden, for: .tabBar)
         case .articleEdit(let isEditMode, let category, let article):
             injector?.resolve(ArticleEditView.self, arg1: isEditMode, arg2: category, arg3: article)
+        case .trade(let category):
+            injector?.resolve(TradeView.self, arg: category)
+        case .tradeDetail(let trade):
+            injector?.resolve(TradeDetailView.self, arg: trade)
+                .navigationTitle("나눔·거래")
+                .toolbar(.hidden, for: .tabBar)
+        case .tradeEdit(let category, let trade):
+            injector?.resolve(TradeEditView.self, arg1: category, arg2: trade)
         default:
             Text("\(scene)")
                 .toolbar(.hidden, for: .tabBar)

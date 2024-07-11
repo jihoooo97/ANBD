@@ -52,7 +52,7 @@ public struct ANBDTabView: View {
             
             NavigationStack(path: $coordinator.tradePath) {
                 tradeView
-                    .navigationTitle("나눔 거래")
+                    .navigationTitle("나눔·거래")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(for: TabScene.self) { scene in
                         coordinator.buildScene(scene)

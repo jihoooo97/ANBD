@@ -113,6 +113,19 @@ struct PresentationAssembly: Assembly {
             let viewModel = resolver.resolve(TradeViewModel.self)!
             return TradeView(viewModel: viewModel, category)
         }
+        
+        container.register(TradeDetailViewModel.self) { (resolver, trade: Trade) in
+            return TradeDetailViewModel(coordinator: tabCoordinator, trade: trade)
+        }
+        
+        container.register(TradeDetailView.self) { (resolver, trade: Trade) in
+            let viewModel = resolver.resolve(TradeDetailViewModel.self, argument: trade)!
+            return TradeDetailView(viewModel: viewModel)
+        }
+        
+        container.register(TradeEditView.self) { (resolver, category: TradeCategory, trade: Trade?) in
+            return TradeEditView(category, trade: trade)
+        }
     }
     
 }

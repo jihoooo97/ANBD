@@ -30,7 +30,8 @@ public enum TabScene: Sceneable {
     case articleEdit(Bool, ArticleCategory, String?)
     
     case trade(TradeCategory)
-    case tradeDetail
+    case tradeDetail(Trade)
+    case tradeEdit(TradeCategory, Trade?)
     
     case chatList, chatRoom
     case profile
