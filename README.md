@@ -8,41 +8,6 @@
 [앱스토어](https://apps.apple.com/kr/app/anbd/id6502585089)
 <br>
 
-## 개발 환경
-| 버전 | iOS 16.0+ |
-|:-:|:-:|
-| Framework | SwiftUI |
-| 구조 | MVVM-C + Combine |
-| DI | Swinject |
-| BaaS | FirebaseFirestore |
-| Library | Firebase, Kingfisher |
-<br>
-
-## 프로젝트 빌드
-
-1. mise를 통해 Tuist를 설치한 상태여야합니다. [Tuist 설치 방법](https://docs.tuist.io/guide/introduction/installation.html)
-2. git clone
-3. 프로젝트 경로에서 tuist install
-4. tuist generate
-<br>
-
-## 모듈 구조
-
-![graph](https://github.com/jihoooo97/ANBD/assets/49361214/ded24646-bdf8-4b26-b37b-b847e01307a6)
-
-<br>
-
-- **ANBD**  
-App 모듈 (App, DI, Coordinator)
-- **Presentation**  
-UI관련 모듈 (View, ViewModel)
-- **ANBDCore**  
-서버 통신, 비즈니스 로직, 공통 기능(Enum, Extension, Manager)
-- **CommonUI**  
-앱 전반으로 쓰일 공통 UI 모듈 (ViewModifier, Custom View, UI-Extension, Font · Color Enum)
-
-<br>
-
 ## Screen 📱
 <details>
 <summary>더 보기</summary>
@@ -82,8 +47,43 @@ UI관련 모듈 (View, ViewModel)
 <br>
 
 
-## Experience
-### 문제 1.
+## 개발 환경
+| 버전 | iOS 16.0+ |
+|:-:|:-:|
+| Framework | SwiftUI |
+| 구조 | MVVM-C + Combine |
+| DI | Swinject |
+| BaaS | FirebaseFirestore |
+| Library | Firebase, Kingfisher |
+<br>
+
+## 프로젝트 빌드
+
+1. mise를 통해 Tuist를 설치한 상태여야합니다. [Tuist 설치 방법](https://docs.tuist.io/guide/introduction/installation.html)
+2. git clone
+3. 프로젝트 경로에서 tuist install
+4. tuist generate
+<br>
+
+## 모듈 구조
+
+![graph](https://github.com/jihoooo97/ANBD/assets/49361214/ded24646-bdf8-4b26-b37b-b847e01307a6)
+
+> **모듈화**
+```
+- 비슷한 책임을 갖는 코드(클래스, 패키지, 라이브러리 등)를 묶어 모듈로 나눠서 응집도를 향상시킴
+- 모듈 간 의존 관계를 설정함으로써 알아야하는 대상과 알지 못해야하는 대상을 명확히 구분해줌으로 결합도를 낮추고 실수를 방지해 유지 보수가 용이함
+- 만들어 놓은 모듈은 다른 프로젝트에서도 재사용할 수 있어 개발 효율이 높아짐
+```
+
+- **ANBD**  
+App 모듈 (App, DI, Coordinator)
+- **Presentation**  
+UI관련 모듈 (View, ViewModel)
+- **ANBDCore**  
+서버 통신, 비즈니스 로직, 공통 기능(Enum, Extension, Manager)
+- **CommonUI**  
+앱 전반으로 쓰일 공통 UI 모듈 (ViewModifier, Custom View, UI-Extension, Font · Color Enum)
 
 <br>
 
