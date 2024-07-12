@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Trade: Codable, Identifiable, Hashable {
+public struct Trade: Postable {
     public let id: String
     public let writerID: String
     public let writerNickname: String
@@ -55,4 +55,20 @@ public struct Trade: Codable, Identifiable, Hashable {
         self.thumbnailImagePath = thumbnailImagePath
         self.imagePaths = imagePaths
     }
+    
+    public static let `default` = Trade(
+        id: "",
+        writerID: "",
+        writerNickname: "작성자명",
+        createdAt: .now,
+        category: .nanua,
+        itemCategory: "카테고리",
+        location: "서울",
+        tradeState: .trading,
+        title: "제목",
+        content: "내용",
+        myProduct: "나의 물건",
+        wantProduct: "원하는 물건",
+        thumbnailImagePath: ""
+    )
 }

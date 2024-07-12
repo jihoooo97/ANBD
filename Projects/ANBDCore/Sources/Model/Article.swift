@@ -8,7 +8,20 @@
 
 import Foundation
 
-public struct Article: Codable, Identifiable, Hashable {
+public typealias PostableCategory = Categorial & CaseIterable
+
+public protocol Postable: Codable, Identifiable, Hashable {
+    var id: String { get }
+    var writerID: String { get }
+    var writerNickname: String { get }
+    var createdAt: Date { get }
+    var title: String { get }
+    var content: String { get }
+    var thumbnailImagePath: String { get }
+//    var imagePaths: [String] { get }
+}
+
+public struct Article: Postable {
     public let id: String
     public let writerID: String
     public let writerNickname: String
@@ -47,4 +60,18 @@ public struct Article: Codable, Identifiable, Hashable {
         self.likeCount = likeCount
         self.commentCount = commentCount
     }
+    
+    public static let `default` = Article(
+        id: "",
+        writerID: "",
+        writerNickname: "작성자명",
+        createdAt: .now,
+        category: .accua,
+        title: "제목",
+        content: "내용",
+        thumbnailImagePath: "",
+        imagePaths: [],
+        likeCount: 0,
+        commentCount: 0
+    )
 }

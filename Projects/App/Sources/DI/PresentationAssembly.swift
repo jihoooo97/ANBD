@@ -79,6 +79,15 @@ struct PresentationAssembly: Assembly {
             return HomeView(viewModel: viewModel)
         }
         
+        container.register(HomeDetailViewModel.self) { (resolver, category: ANBDCategory) in
+            return HomeDetailViewModel(coordinator: tabCoordinator, category: category)
+        }
+        
+        container.register(HomeDetailView.self) { (resolver, category: ANBDCategory) in
+            let viewModel = resolver.resolve(HomeDetailViewModel.self, argument: category)!
+            return HomeDetailView(viewModel: viewModel)
+        }
+        
         
         // MARK: Article
         container.register(ArticleViewModel.self) { resolver in

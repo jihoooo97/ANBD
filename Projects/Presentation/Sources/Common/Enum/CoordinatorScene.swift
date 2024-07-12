@@ -24,6 +24,7 @@ public enum AuthScene: Sceneable {
 public enum TabScene: Sceneable {
     case tab
     case home
+    case homeDetail(ANBDCategory)
     
     case article(ArticleCategory)
     case articleDetail(Article)

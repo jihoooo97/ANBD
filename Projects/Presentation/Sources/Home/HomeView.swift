@@ -6,20 +6,21 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
+import ANBDCore
 import CommonUI
+
 import SwiftUI
 
 public struct HomeView: View {
-    @ObservedObject private var viewModel: HomeViewModel
+    @StateObject private var viewModel: HomeViewModel
     
     public init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
+        self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
     public var body: some View {
-//        GeometryReader { proxy in
         ScrollView {
-            VStack {
+            VStack(spacing: 24) {
                 TabView {
                     ForEach(0..<4, id: \.self) { index in
                         Button {
@@ -35,107 +36,106 @@ public struct HomeView: View {
                 .frame(height: 100)
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 
-                VStack {
+                VStack(spacing: 4) {
                     HStack {
                         Text("아껴쓰기")
+                            .anbdFont(.subtitle1)
                         
                         Spacer()
                         
                         Button {
-                            viewModel.push(.article(.accua))
+                            viewModel.push(.homeDetail(.article(.accua)))
                         } label: {
                             Text("더보기")
                             
                             Image(systemName: "chevron.right")
                         }
+                        .anbdFont(.body2)
                     }
                     
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.accentColor)
-                        .frame(height: 100)
+                    FullCell(article: viewModel.recentAccua)
                 }
                 
-                VStack {
+                VStack(spacing: 4) {
                     HStack {
                         Text("나눠쓰기")
+                            .anbdFont(.subtitle1)
                         
                         Spacer()
                         
                         Button {
-                            viewModel.push(.trade(.nanua))
+                            viewModel.push(.homeDetail(.trade(.nanua)))
                         } label: {
                             Text("더보기")
                             
                             Image(systemName: "chevron.right")
                         }
+                        .anbdFont(.body2)
                     }
                     
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(0..<4, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.accentColor)
-                                    .frame(width: 100, height: 100)
+                            ForEach(viewModel.recentNanuaList) { nanua in
+                                SqureCell(trade: nanua)
                             }
                         }
+                        .padding(.horizontal)
                     }
+                    .padding(.horizontal, -16)
                     .scrollIndicators(.hidden)
                 }
                 
-                VStack {
+                VStack(spacing: 4) {
                     HStack {
                         Text("바꿔쓰기")
+                            .anbdFont(.subtitle1)
                         
                         Spacer()
                         
                         Button {
-                            viewModel.push(.trade(.baccua))
+                            viewModel.push(.homeDetail(.trade(.baccua)))
                         } label: {
                             Text("더보기")
                             
                             Image(systemName: "chevron.right")
                         }
+                        .anbdFont(.body2)
                     }
                     
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(0..<4, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.accentColor)
-                                    .frame(width: 100, height: 100)
+                            ForEach(viewModel.recentbaccuaList) { baccua in
+                                SqureCell(trade: baccua)
                             }
                         }
+                        .padding(.horizontal)
                     }
+                    .padding(.horizontal, -16)
                     .scrollIndicators(.hidden)
                 }
                 
-                VStack {
+                VStack(spacing: 4) {
                     HStack {
                         Text("다시쓰기")
+                            .anbdFont(.subtitle1)
                         
                         Spacer()
                         
                         Button {
-                            viewModel.push(.article(.dasi))
+                            viewModel.push(.homeDetail(.article(.dasi)))
                         } label: {
                             Text("더보기")
                             
                             Image(systemName: "chevron.right")
                         }
+                        .anbdFont(.body2)
                     }
                     
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.accentColor)
-                        .frame(height: 100)
-                }
-                
-                Button("Logout") {
-                    UserDefaults.standard.set(false, forKey: "isLogined")
+                    FullCell(article: viewModel.recentDasi)
                 }
             }
             .padding()
         }
-//        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Text("ANBD")
@@ -151,6 +151,18 @@ public struct HomeView: View {
                         .foregroundStyle(Color.g900)
                 }
             }
+        }
+        .task {
+            guard viewModel.recentAccua == nil,
+                  viewModel.recentDasi == nil,
+                  viewModel.recentNanuaList.isEmpty,
+                  viewModel.recentbaccuaList.isEmpty
+            else { return }
+            
+            await viewModel.fetchArticle(.accua)
+            await viewModel.fetchArticle(.dasi)
+            await viewModel.fetchTradeList(.nanua)
+            await viewModel.fetchTradeList(.baccua)
         }
     }
 }

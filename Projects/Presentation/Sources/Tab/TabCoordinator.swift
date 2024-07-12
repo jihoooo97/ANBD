@@ -52,6 +52,10 @@ public final class TabCoordinator: Coordinator {
             injector?.resolve(ANBDTabView.self)
         case .home:
             injector?.resolve(HomeView.self)
+        case .homeDetail(let category):
+            injector?.resolve(HomeDetailView.self, arg: category)
+                .navigationTitle(category.name)
+                .toolbar(.hidden, for: .tabBar)
         case .article(let category):
             injector?.resolve(ArticleView.self, arg: category)
                 .navigationTitle(category.name)

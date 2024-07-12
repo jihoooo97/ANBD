@@ -13,7 +13,7 @@ public protocol Categorial: Codable, Hashable, Identifiable {
     var id: String { get }
 }
 
-public enum ANBDCategory: Categorial {
+public enum ANBDCategory: Hashable, Identifiable {
     case article(ArticleCategory)
     case trade(TradeCategory)
     
