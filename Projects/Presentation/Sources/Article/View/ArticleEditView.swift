@@ -49,7 +49,23 @@ public struct ArticleEditView: View {
                 
                 Spacer()
                 
-                Text(selection.name)
+                Menu {
+                    ForEach(ArticleCategory.allCases) { category in
+                        Button(category.name) {
+                            guard selection != category else { return }
+                            selection = category
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text(selection.name)
+                            .bold()
+                            
+                        Image(systemName: "chevron.down.circle.fill")
+                            .foregroundStyle(.gray, Color.g100)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
                 
                 Spacer()
                 
