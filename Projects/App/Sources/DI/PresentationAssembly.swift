@@ -7,6 +7,7 @@
 //
 
 import ANBDCore
+import Domain
 import Presentation
 
 import Swinject
@@ -91,7 +92,8 @@ struct PresentationAssembly: Assembly {
         
         // MARK: Article
         container.register(ArticleViewModel.self) { resolver in
-            return ArticleViewModel(coordinator: tabCoordinator)
+            let useCase = resolver.resolve(ArticleUseCase.self)!
+            return ArticleViewModel(coordinator: tabCoordinator, useCase: useCase)
         }
         
         container.register(ArticleView.self) { (resolver, category: ArticleCategory) in
@@ -108,8 +110,14 @@ struct PresentationAssembly: Assembly {
             return ArticleDetailView(viewModel: viewModel)
         }
         
+        container.register(ArticleEditViewModel.self) { resolver in
+            let useCase = resolver.resolve(ArticleUseCase.self)!
+            return ArticleEditViewModel(coordinator: tabCoordinator, useCase: useCase)
+        }
+        
         container.register(ArticleEditView.self) { (resolver, isEditMode: Bool, selection: ArticleCategory, article: String?) in
-            return ArticleEditView(isEditMode: isEditMode, selection, article: article)
+            let viewModel = resolver.resolve(ArticleEditViewModel.self)!
+            return ArticleEditView(viewModel: viewModel, isEditMode: isEditMode, selection, article: article)
         }
         
         

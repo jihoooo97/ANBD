@@ -7,13 +7,13 @@
 //
 
 import ANBDCore
+import Domain
 
 import Foundation
 
 
 public final class TradeDetailViewModel: BaseViewModel<TabCoordinator> {
     
-    private let storageService: StorageServiceInterface = StorageService()
     let trade: Trade
     
     @Published private(set) var imageURLs: [URL] = []
@@ -26,17 +26,17 @@ public final class TradeDetailViewModel: BaseViewModel<TabCoordinator> {
  
     
     func fetchImageList() async {
-        guard !trade.imagePaths.isEmpty else { return }
-        
-        do {
-            let urls = try await storageService.downloadImageList(path: .trade, id: trade.id)
-            
-            await MainActor.run {
-                imageURLs = urls
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
+//        guard !trade.imageURLs.isEmpty else { return }
+//        
+//        do {
+//            let urls = try await storageService.downloadImageList(path: .trade, id: trade.id)
+//            
+//            await MainActor.run {
+//                imageURLs = urls
+//            }
+//        } catch {
+//            print(error.localizedDescription)
+//        }
     }
     
 }

@@ -7,12 +7,13 @@
 //
 
 import ANBDCore
+import Domain
 
 import Foundation
 
 public final class HomeViewModel: BaseViewModel<TabCoordinator> {
     
-    private let storageService: StorageServiceInterface = StorageService()
+    private let storageService = StorageService.shared
     
     @Published private(set) var recentAccua: Article?
     @Published private(set) var recentDasi: Article?
@@ -27,16 +28,15 @@ public final class HomeViewModel: BaseViewModel<TabCoordinator> {
     
     func fetchArticle(_ category: ArticleCategory) async {
         do {
-            guard let documentSnapshot = try await FireStoreDB.article
+            let documentSnapshot = try await FireStoreDB.article
                 .whereField("category", isEqualTo: category.rawValue)
                 .order(by: "createdAt", descending: true)
                 .limit(to: 1)
                 .getDocuments()
                 .documents
                 .first
-            else { throw StorageError.downloadError }
             
-            let article = try documentSnapshot.data(as: Article.self)
+            let article = try documentSnapshot?.data(as: Article.self)
             
             await MainActor.run {
                 switch category {

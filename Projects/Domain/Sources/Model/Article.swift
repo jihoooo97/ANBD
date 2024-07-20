@@ -6,6 +6,8 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
+import ANBDCore
+
 import Foundation
 
 public typealias PostableCategory = Categorial & CaseIterable
@@ -17,8 +19,8 @@ public protocol Postable: Codable, Identifiable, Hashable {
     var createdAt: Date { get }
     var title: String { get }
     var content: String { get }
-    var thumbnailImagePath: String { get }
-//    var imagePaths: [String] { get }
+    var thumbnailImageURL: String { get }
+    var imageURLs: [String] { get }
 }
 
 public struct Article: Postable {
@@ -29,8 +31,8 @@ public struct Article: Postable {
     public let category: ArticleCategory
     public let title: String
     public let content: String
-    public let thumbnailImagePath: String
-    public let imagePaths: [String]
+    public var thumbnailImageURL: String
+    public var imageURLs: [String]
     public let likeCount: Int
     public let commentCount: Int
     
@@ -43,8 +45,8 @@ public struct Article: Postable {
         category: ArticleCategory,
         title: String,
         content: String,
-        thumbnailImagePath: String,
-        imagePaths: [String] = [],
+        thumbnailImageURL: String,
+        imageURLs: [String] = [],
         likeCount: Int = 0,
         commentCount: Int = 0
     ) {
@@ -55,8 +57,8 @@ public struct Article: Postable {
         self.category = category
         self.title = title
         self.content = content
-        self.thumbnailImagePath = thumbnailImagePath
-        self.imagePaths = imagePaths
+        self.thumbnailImageURL = thumbnailImageURL
+        self.imageURLs = imageURLs
         self.likeCount = likeCount
         self.commentCount = commentCount
     }
@@ -69,8 +71,8 @@ public struct Article: Postable {
         category: .accua,
         title: "제목",
         content: "내용",
-        thumbnailImagePath: "",
-        imagePaths: [],
+        thumbnailImageURL: "",
+        imageURLs: [],
         likeCount: 0,
         commentCount: 0
     )

@@ -6,6 +6,8 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
+import ANBDCore
+
 import Foundation
 
 public struct Trade: Postable {
@@ -21,8 +23,8 @@ public struct Trade: Postable {
     public let content: String
     public let myProduct: String
     public let wantProduct: String?
-    public let thumbnailImagePath: String
-    public let imagePaths: [String]
+    public let thumbnailImageURL: String
+    public let imageURLs: [String]
     
     public init(
         id: String = UUID().uuidString,
@@ -37,8 +39,8 @@ public struct Trade: Postable {
         content: String,
         myProduct: String,
         wantProduct: String? = nil,
-        thumbnailImagePath: String,
-        imagePaths: [String] = []
+        thumbnailImageURL: String,
+        imageURLs: [String] = []
     ) {
         self.id = id
         self.writerID = writerID
@@ -52,8 +54,8 @@ public struct Trade: Postable {
         self.content = content
         self.myProduct = myProduct
         self.wantProduct = wantProduct
-        self.thumbnailImagePath = thumbnailImagePath
-        self.imagePaths = imagePaths
+        self.thumbnailImageURL = thumbnailImageURL
+        self.imageURLs = imageURLs
     }
     
     public static let `default` = Trade(
@@ -69,6 +71,6 @@ public struct Trade: Postable {
         content: "내용",
         myProduct: "나의 물건",
         wantProduct: "원하는 물건",
-        thumbnailImagePath: ""
+        thumbnailImageURL: ""
     )
 }

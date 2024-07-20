@@ -54,6 +54,10 @@ public struct HomeView: View {
                     }
                     
                     FullCell(article: viewModel.recentAccua)
+                        .onTapGesture {
+                            guard let article = viewModel.recentAccua else { return }
+                            viewModel.push(.articleDetail(article))
+                        }
                 }
                 
                 VStack(spacing: 4) {
@@ -132,6 +136,10 @@ public struct HomeView: View {
                     }
                     
                     FullCell(article: viewModel.recentDasi)
+                        .onTapGesture {
+                            guard let article = viewModel.recentDasi else { return }
+                            viewModel.push(.articleDetail(article))
+                        }
                 }
             }
             .padding()

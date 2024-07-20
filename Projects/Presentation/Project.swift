@@ -6,8 +6,8 @@ let project = Project.makeModule(
     product: .staticFramework,
     dependencies: [
         .project(
-            target: "ANBDCore",
-            path: .relativeToRoot("Projects/ANBDCore")
+            target: "Domain",
+            path: .relativeToRoot("Projects/Domain")
         ),
         .project(
             target: "CommonUI",

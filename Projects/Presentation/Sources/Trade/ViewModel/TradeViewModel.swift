@@ -7,6 +7,7 @@
 //
 
 import ANBDCore
+import Domain
 
 import Foundation
 import FirebaseFirestore

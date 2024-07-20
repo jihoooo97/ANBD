@@ -49,8 +49,8 @@ public struct ArticleDetailView: View {
                             .padding(.bottom)
                         
                         VStack {
-                            ForEach(viewModel.imageURLs, id: \.self) { url in
-                                AsyncImage(url: url) { image in
+                            ForEach(viewModel.article.imageURLs, id: \.self) { url in
+                                AsyncImage(url: URL(string: url)) { image in
                                     image
                                         .resizable()
                                         .frame(height: 200)
@@ -151,7 +151,6 @@ public struct ArticleDetailView: View {
             }
         }
         .task {
-            await viewModel.fetchImageList()
             await viewModel.fetchCommentList()
         }
     }

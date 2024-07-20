@@ -6,22 +6,19 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
-import ANBDCore
+import Domain
 
 import SwiftUI
 
 struct SqureCell: View {
-    private let storageService = StorageService()
     private let trade: Trade
-    
-    @State private var imageURL: URL?
     
     public init(trade: Trade) {
         self.trade = trade
     }
     
     var body: some View {
-        AsyncImage(url: imageURL) { image in
+        AsyncImage(url: URL(string: trade.thumbnailImageURL)) { image in
             image
                 .resizable()
                 .scaledToFill()
@@ -38,19 +35,6 @@ struct SqureCell: View {
                 .anbdFont(.subtitle2)
                 .foregroundStyle(.white)
                 .lineLimit(1)
-        }
-        .task {
-            guard imageURL == nil else { return }
-            imageURL = await downloadImageURL(path: .trade, id: trade.id, imageName: trade.thumbnailImagePath)
-        }
-    }
-    
-    private func downloadImageURL(path: StoragePath, id: String, imageName: String) async -> URL {
-        do {
-            let url = try await storageService.downloadImage(path: path, id: id, imageName: "thumbnail/" + imageName)
-            return url
-        } catch {
-            return URL(string: "https://firebasestorage.googleapis.com/v0/b/anbd-project3.appspot.com/o/Profile%2FDefaultUserProfileImage.png?alt=media&token=fc0e56d9-6855-4ead-ab28-d8ff789799b3")!
         }
     }
 }

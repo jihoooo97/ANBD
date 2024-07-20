@@ -6,42 +6,59 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
-import Foundation
-import FirebaseStorage
+import ANBDCore
 
-public protocol StorageServiceInterface {
-    func uploadImage(path: StoragePath, id: String, image: Data) async throws -> String
-    func downloadImage(path: StoragePath, id: String, imageName: String) async throws -> URL
-    func downloadImageList(path: StoragePath, id: String) async throws -> [URL]
-}
+import UIKit
 
-public final class StorageService: StorageServiceInterface {
+public final class StorageService {
     
     private let storage = FireStoreDB.storage
+    public static let shared = StorageService()
     
-    
-    public init() { }
+    private init() { }
     
     
     public func uploadImage(
         path: StoragePath, 
         id: String,
-        image: Data
+        image: Data,
+        name: String
     ) async throws -> String {
         if id.isEmpty { throw StorageError.emptyID  }
         
-        let imageName = "\(UUID().uuidString).jpeg"
-        guard let _ = try? await storage
+        let imageName = name + ".jpeg"
+        let ref = storage
             .child(path.name)
             .child(id)
             .child(imageName)
-            .putDataAsync(image)
-        else {
-            throw StorageError.uploadError
+        
+        guard let resizedImage = await UIImage(data: image)?
+            .byPreparingThumbnail(ofSize: imageName == "thumbnail" ? .init(width: 512, height: 512) : .init(width: 1024, height: 1024))?
+            .jpegData(compressionQuality: 1)
+        else { throw StorageError.uploadError }
+        
+        let _ = try await ref.putDataAsync(resizedImage)
+        let url = try await ref.downloadURL().absoluteString
+        return url
+    }
+    
+    public func uploadImageList(
+        path: StoragePath,
+        id: String,
+        images: [Data]
+    ) async throws -> [String] {
+        if id.isEmpty { throw StorageError.emptyID  }
+        
+        var imageURLs: [String] = []
+        
+        for index in images.indices {
+            let url = try await uploadImage(path: path, id: id, image: images[index], name: "\(index)")
+            imageURLs.append(url)
         }
         
-        return imageName
+        return imageURLs
     }
+    
     
     public func downloadImage(
         path: StoragePath,

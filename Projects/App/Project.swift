@@ -8,8 +8,8 @@ let project = Project.makeModule(
     resources: ["Resources/**"],
     dependencies: [
         .project(
-            target: "ANBDCore",
-            path: .relativeToRoot("Projects/ANBDCore")
+            target: "Data",
+            path: .relativeToRoot("Projects/Data")
         ),
         .project(
             target: "Presentation",

@@ -7,13 +7,13 @@
 //
 
 import ANBDCore
+import Domain
 
 import Foundation
 
 
 public final class HomeDetailViewModel: BaseViewModel<TabCoordinator> {
     
-    private let storageService: StorageServiceInterface = StorageService()
     let category: ANBDCategory
     
     @Published private(set) var articleList: [Article] = []

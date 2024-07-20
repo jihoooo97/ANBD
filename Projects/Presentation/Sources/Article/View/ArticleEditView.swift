@@ -7,22 +7,30 @@
 //
 
 import ANBDCore
+
 import SwiftUI
+import PhotosUI
 
 public struct ArticleEditView: View {
     @Environment(\.dismiss) private var dismiss
+    
+    @StateObject private var viewModel: ArticleEditViewModel
     
     @State private var isEditMode: Bool
     @State private var selection: ArticleCategory
     
     @State private var title: String = ""
     @State private var content: String = ""
+    @State private var selectedImages: [PhotosPickerItem] = []
+    @State private var selectedImageDatas: [Data] = []
     
     public init(
+        viewModel: ArticleEditViewModel,
         isEditMode: Bool = false,
         _ selection: ArticleCategory,
         article: String? = nil
     ) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
         self.isEditMode = isEditMode
         self.selection = selection
         
@@ -46,7 +54,15 @@ public struct ArticleEditView: View {
                 Spacer()
                 
                 Button("완료") {
-                    
+                    Task {
+                        await viewModel.writeArticle(
+                            title: title,
+                            content: content,
+                            imageDatas: selectedImageDatas
+                        )
+                        
+                        dismiss()
+                    }
                 }
                 .disabled(title.isEmpty || content.isEmpty)
             }
@@ -88,7 +104,47 @@ public struct ArticleEditView: View {
                     }
                 }
         
+            VStack {
+                ScrollView(.horizontal) {
+                    LazyHStack {
+                        ForEach(selectedImageDatas, id: \.self) { data in
+                            if let image = UIImage(data: data) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width : 70 , height: 70)
+                                    .cornerRadius(10)
+                                    .clipped()
+                                    .padding(10)
+                            }
+                        }
+                    }
+                }
+                
+                HStack {
+                    PhotosPicker(
+                        selection: $selectedImages,
+                        maxSelectionCount: 5 - selectedImages.count
+                    ) {
+                        Image(systemName: "photo")
+                    }
+                    
+                }
+            }
         }
         .padding(.horizontal)
+        .onChange(of: selectedImages) { items in
+            for item in items {
+                item.loadTransferable(type: Data.self) { result in
+                    switch result {
+                    case .success(let data):
+                        guard let data else { return }
+                        selectedImageDatas.append(data)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        }
     }
 }

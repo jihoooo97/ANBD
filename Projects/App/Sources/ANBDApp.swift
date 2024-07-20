@@ -17,7 +17,8 @@ struct ANBDApp: App {
     
     init() {
         injector.assemble([
-            CoreAssembly(),
+            DataAssembly(),
+            DomainAssembly(),
             PresentationAssembly(
                 loginCoordinator: loginCoordinator,
                 tabCoordinator: tabCoordinator

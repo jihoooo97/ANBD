@@ -7,14 +7,13 @@
 //
 
 import ANBDCore
+import Domain
 
 import Foundation
 
 public final class ArticleDetailViewModel: BaseViewModel<TabCoordinator> {
-    private let storageService: StorageServiceInterface = StorageService()
     
     @Published private(set) var article: Article
-    @Published private(set) var imageURLs: [URL] = []
     @Published private(set) var commentList: [Comment] = []
     
     
@@ -23,20 +22,6 @@ public final class ArticleDetailViewModel: BaseViewModel<TabCoordinator> {
         super.init(coordinator: coordinator)
     }
     
-    
-    func fetchImageList() async {
-        guard !article.imagePaths.isEmpty else { return }
-        
-        do {
-            let urls = try await storageService.downloadImageList(path: .article, id: article.id)
-            
-            await MainActor.run {
-                imageURLs = urls
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
     
     func fetchCommentList() async {
         do {

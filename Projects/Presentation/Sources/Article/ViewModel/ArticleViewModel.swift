@@ -7,20 +7,20 @@
 //
 
 import ANBDCore
+import Domain
 
 import Foundation
-import FirebaseFirestore
 
 public final class ArticleViewModel: BaseViewModel<TabCoordinator> {
+    
+    private let useCase: ArticleUseCase
     
     @Published private(set) var accuaList: [Article] = []
     @Published private(set) var dasiList: [Article] = []
     
-    private var accuaQuery: Query?
-    private var dasiQuery: Query?
     
-    
-    public override init(coordinator: TabCoordinator) {
+    public init(coordinator: TabCoordinator, useCase: ArticleUseCase) {
+        self.useCase = useCase
         super.init(coordinator: coordinator)
     }
     
@@ -28,13 +28,7 @@ public final class ArticleViewModel: BaseViewModel<TabCoordinator> {
     func fetchArticleList(category: ArticleCategory) async {
         print("fetch \(category.name)")
         do  {
-            let documentSnapshots = try await FireStoreDB.article
-                .whereField("category", isEqualTo: category.rawValue)
-                .order(by: "createdAt", descending: true)
-                .getDocuments()
-                .documents
-            
-            let articleList = documentSnapshots.compactMap { try? $0.data(as: Article.self) }
+            let articleList = try await useCase.fetchArticleList(category)
             
             await MainActor.run {
                 switch category {

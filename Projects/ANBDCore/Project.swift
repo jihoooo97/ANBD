@@ -3,7 +3,7 @@ import ProjectDescriptionHelpers
 
 let project = Project.makeModule(
     name: "ANBDCore",
-    product: .staticFramework,
+    product: .framework,
     dependencies: [
         .external(name: "FirebaseAuth"),
         .external(name: "FirebaseFirestore"),

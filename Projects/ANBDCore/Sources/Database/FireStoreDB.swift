@@ -16,15 +16,15 @@ public enum FireStoreDB {
     }
     
     public static var article: CollectionReference {
-        Firestore.firestore().collection("ArticleBoard")
+        Firestore.firestore().collection("TestArticle")
     }
     
     public static var comment: CollectionReference {
-        Firestore.firestore().collection("CommentBoard")
+        Firestore.firestore().collection("TestComment")
     }
     
     public static var trade: CollectionReference {
-        Firestore.firestore().collection("TradeBoard")
+        Firestore.firestore().collection("TestTrade")
     }
     
     public static var chat: CollectionReference {

@@ -6,12 +6,11 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
-import ANBDCore
+import Domain
 
 import SwiftUI
 
 struct TradeListCell: View {
-    private let storageService = StorageService()
     let trade: Trade
     
     @State private var imageURL: URL?
@@ -60,17 +59,10 @@ struct TradeListCell: View {
             .padding(.leading, 2)
         }
         .task {
-            guard imageURL == nil else { return }
-            imageURL = await downloadImageURL(id: trade.id, imageName: trade.thumbnailImagePath)
-        }
-    }
-    
-    private func downloadImageURL(id: String, imageName: String) async -> URL {
-        do {
-            let url = try await storageService.downloadImage(path: .trade, id: id, imageName: "thumbnail/" + imageName)
-            return url
-        } catch {
-            return URL(string: "https://firebasestorage.googleapis.com/v0/b/anbd-project3.appspot.com/o/Profile%2FDefaultUserProfileImage.png?alt=media&token=fc0e56d9-6855-4ead-ab28-d8ff789799b3")!
+            guard imageURL == nil,
+                  let url = URL(string: trade.thumbnailImageURL)
+            else { return }
+            imageURL = url
         }
     }
 }
