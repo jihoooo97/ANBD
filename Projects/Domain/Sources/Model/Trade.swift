@@ -23,8 +23,8 @@ public struct Trade: Postable {
     public let content: String
     public let myProduct: String
     public let wantProduct: String?
-    public let thumbnailImageURL: String
-    public let imageURLs: [String]
+    public var thumbnailImageURL: String
+    public var imageURLs: [String]
     
     public init(
         id: String = UUID().uuidString,

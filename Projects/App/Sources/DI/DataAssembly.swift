@@ -18,6 +18,12 @@ struct DataAssembly: Assembly {
         container.register(ArticleRepository.self) { resolver in
             return ArticleRepositoryImpl()
         }
+        
+        
+        // MARK: Trade
+        container.register(TradeRepository.self) { resolver in
+            return TradeRepositoryImpl()
+        }
     }
     
 }

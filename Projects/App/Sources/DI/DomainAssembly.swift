@@ -16,7 +16,14 @@ struct DomainAssembly: Assembly {
         // MARK: Article
         container.register(ArticleUseCase.self) { resolver in
             let repository = resolver.resolve(ArticleRepository.self)!
-            return ArticleUseCase(articleRepository: repository)
+            return ArticleUseCaseImpl(articleRepository: repository)
+        }
+        
+        
+        // MARK: Trade
+        container.register(TradeUseCase.self) { resolver in
+            let repository = resolver.resolve(TradeRepository.self)!
+            return TradeUseCaseImpl(tradeRepository: repository)
         }
     }
     

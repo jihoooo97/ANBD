@@ -18,7 +18,7 @@ public extension Date {
     
     var relativeFormat: String {
         let formatter = Date.relativeDateTimeFormater
-        let monthGap: TimeInterval = 60 * 60 * 24 * 30
+        let monthGap: TimeInterval = 60 * 60 * 24
         
         if Date.now.timeIntervalSince(self) < 60 {
             return "방금 전"

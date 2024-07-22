@@ -10,7 +10,13 @@ import ANBDCore
 
 import Foundation
 
-public final class ArticleUseCase {
+public protocol ArticleUseCase {
+    func fetchArticle(id: String) async throws -> Article
+    func fetchArticleList(_ category: ArticleCategory) async throws -> [Article]
+    func writeArticle(_ article: Article) async throws
+}
+
+public final class ArticleUseCaseImpl: ArticleUseCase {
     
     private let articleRepository: ArticleRepository
     

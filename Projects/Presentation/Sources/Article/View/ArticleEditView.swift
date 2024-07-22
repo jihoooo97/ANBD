@@ -7,6 +7,7 @@
 //
 
 import ANBDCore
+import Domain
 
 import SwiftUI
 import PhotosUI
@@ -16,9 +17,7 @@ public struct ArticleEditView: View {
     
     @StateObject private var viewModel: ArticleEditViewModel
     
-    @State private var isEditMode: Bool
     @State private var selection: ArticleCategory
-    
     @State private var title: String = ""
     @State private var content: String = ""
     @State private var selectedImages: [PhotosPickerItem] = []
@@ -26,17 +25,16 @@ public struct ArticleEditView: View {
     
     public init(
         viewModel: ArticleEditViewModel,
-        isEditMode: Bool = false,
         _ selection: ArticleCategory,
-        article: String? = nil
+        article: Article? = nil
     ) {
         self._viewModel = StateObject(wrappedValue: viewModel)
-        self.isEditMode = isEditMode
         self.selection = selection
         
         if let article {
-            self.title = article
-            self.content = "수정 중 입니다"
+            self.selection = article.category
+            self.title = article.title
+            self.content = article.content
         }
     }
     
@@ -72,6 +70,7 @@ public struct ArticleEditView: View {
                 Button("완료") {
                     Task {
                         await viewModel.writeArticle(
+                            selection,
                             title: title,
                             content: content,
                             imageDatas: selectedImageDatas

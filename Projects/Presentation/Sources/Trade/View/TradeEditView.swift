@@ -10,11 +10,17 @@ import ANBDCore
 import Domain
 
 import SwiftUI
+import PhotosUI
 
 public struct TradeEditView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @StateObject private var viewModel: TradeEditViewModel
+    
     @FocusState private var focused: Field?
+    
+    @State private var selectedImages: [PhotosPickerItem] = []
+    @State private var selectedImageDatas: [Data] = []
     
     @State private var title: String = ""
     @State private var selection: TradeCategory
@@ -27,13 +33,20 @@ public struct TradeEditView: View {
     @State private var content: String = ""
     
     public init(
+        viewModel: TradeEditViewModel,
         _ selection: TradeCategory,
         trade: Trade? = nil
     ) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
         self.selection = selection
         
         if let trade {
             self.title = trade.title
+            self.selection = trade.category
+            self.myProduct = trade.myProduct
+            self.wantProduct = trade.wantProduct ?? ""
+            self.itemCategory = ItemCategory.allCases.first { $0.name == trade.itemCategory } ?? .none
+            self.location = Location.allCases.first{ $0.name == trade.location } ?? .seoul
             self.content = trade.content
         }
     }
@@ -52,7 +65,20 @@ public struct TradeEditView: View {
                 Spacer()
                 
                 Button("완료") {
-                    
+                    Task {
+                        await viewModel.writeTrade(
+                            selection,
+                            title: title,
+                            content: content,
+                            itemCategory: itemCategory,
+                            location: location,
+                            myProduct: myProduct,
+                            wantProduct: wantProduct,
+                            imageDatas: selectedImageDatas
+                        )
+                        
+                        dismiss()
+                    }
                 }
                 .disabled(title.isEmpty || content.isEmpty)
             }
@@ -61,9 +87,10 @@ public struct TradeEditView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 32) {
-                    Button {
-                        
-                    } label: {
+                    PhotosPicker(
+                        selection: $selectedImages,
+                        maxSelectionCount: 5 - selectedImages.count
+                    ) {
                         RoundedRectangle(cornerRadius: 10.0)
                             .strokeBorder(.gray, lineWidth: 1)
                             .overlay {
@@ -72,7 +99,7 @@ public struct TradeEditView: View {
                                         .font(.system(size: 25))
                                         .foregroundStyle(.gray)
                                         .padding(3)
-                                    Text("0 / 5")
+                                    Text("\(selectedImages.count) / 5")
                                         .foregroundStyle(.gray)
                                         .font(.system(size: 15))
                                 }
@@ -96,9 +123,13 @@ public struct TradeEditView: View {
                         HStack {
                             ForEach(TradeCategory.allCases) { category in
                                 Button(category.name) {
-                                    
+                                    guard selection != category else { return }
+                                    selection = category
+                                    wantProduct = ""
                                 }
                                 .buttonStyle(BorderedProminentButtonStyle())
+                                .tint(selection == category ? Color.accentColor : .g300)
+                                .disabled(selection == category)
                             }
                         }
                         
@@ -165,6 +196,19 @@ public struct TradeEditView: View {
                     
                 }
                 .padding(.horizontal)
+            }
+        }
+        .onChange(of: selectedImages) { items in
+            for item in items {
+                item.loadTransferable(type: Data.self) { result in
+                    switch result {
+                    case .success(let data):
+                        guard let data else { return }
+                        selectedImageDatas.append(data)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
             }
         }
         .onTapGesture {

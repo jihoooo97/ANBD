@@ -115,15 +115,16 @@ struct PresentationAssembly: Assembly {
             return ArticleEditViewModel(coordinator: tabCoordinator, useCase: useCase)
         }
         
-        container.register(ArticleEditView.self) { (resolver, isEditMode: Bool, selection: ArticleCategory, article: String?) in
+        container.register(ArticleEditView.self) { (resolver, category: ArticleCategory, article: Article?) in
             let viewModel = resolver.resolve(ArticleEditViewModel.self)!
-            return ArticleEditView(viewModel: viewModel, isEditMode: isEditMode, selection, article: article)
+            return ArticleEditView(viewModel: viewModel, category, article: article)
         }
         
         
         // MARK: Trade
         container.register(TradeViewModel.self) { resolver in
-            return TradeViewModel(coordinator: tabCoordinator)
+            let useCase = resolver.resolve(TradeUseCase.self)!
+            return TradeViewModel(coordinator: tabCoordinator, useCase: useCase)
         }
         
         container.register(TradeView.self) { (resolver, category: TradeCategory) in
@@ -140,8 +141,13 @@ struct PresentationAssembly: Assembly {
             return TradeDetailView(viewModel: viewModel)
         }
         
+        container.register(TradeEditViewModel.self) { resolver in
+            let useCase = resolver.resolve(TradeUseCase.self)!
+            return TradeEditViewModel(coordinator: tabCoordinator, useCase: useCase)
+        }
         container.register(TradeEditView.self) { (resolver, category: TradeCategory, trade: Trade?) in
-            return TradeEditView(category, trade: trade)
+            let viewModel = resolver.resolve(TradeEditViewModel.self)!
+            return TradeEditView(viewModel: viewModel, category, trade: trade)
         }
     }
     

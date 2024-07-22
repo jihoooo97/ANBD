@@ -23,12 +23,17 @@ public final class ArticleEditViewModel: BaseViewModel<TabCoordinator> {
     }
     
     
-    func writeArticle(title: String, content: String, imageDatas: [Data]) async {
+    func writeArticle(
+        _ category: ArticleCategory,
+        title: String,
+        content: String,
+        imageDatas: [Data]
+    ) async {
         do {
             var article = Article(
                 writerID: "jiho",
                 writerNickname: "지호구",
-                category: .accua,
+                category: category,
                 title: title,
                 content: content,
                 thumbnailImageURL: ""

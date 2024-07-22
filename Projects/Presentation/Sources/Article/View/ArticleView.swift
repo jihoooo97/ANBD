@@ -61,7 +61,7 @@ public struct ArticleView: View {
         }
         .overlay(alignment: .bottomTrailing) {
             Button {
-                viewModel.present(.articleEdit(false, selectedCategory, nil))
+                viewModel.present(.articleEdit(selectedCategory, nil))
             } label: {
                 Image(systemName: "pencil")
                     .anbdFont(.subtitle1)

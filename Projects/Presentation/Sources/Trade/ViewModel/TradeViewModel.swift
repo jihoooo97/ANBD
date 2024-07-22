@@ -10,18 +10,17 @@ import ANBDCore
 import Domain
 
 import Foundation
-import FirebaseFirestore
 
 public final class TradeViewModel: BaseViewModel<TabCoordinator> {
+    
+    private let useCase: TradeUseCase
     
     @Published private(set) var nanuaList: [Trade] = []
     @Published private(set) var baccuaList: [Trade] = []
     
-    private var nanuaQuery: Query?
-    private var baccuaQuery: Query?
     
-    
-    public override init(coordinator: TabCoordinator) {
+    public init(coordinator: TabCoordinator, useCase: TradeUseCase) {
+        self.useCase = useCase
         super.init(coordinator: coordinator)
     }
     
@@ -29,13 +28,7 @@ public final class TradeViewModel: BaseViewModel<TabCoordinator> {
     func fetchTradeList(category: TradeCategory) async {
         print("fetch \(category.name)")
         do  {
-            let documentSnapshots = try await FireStoreDB.trade
-                .whereField("category", isEqualTo: category.rawValue)
-                .order(by: "createdAt", descending: true)
-                .getDocuments()
-                .documents
-            
-            let tradeList = try documentSnapshots.compactMap { try $0.data(as: Trade.self) }
+            let tradeList = try await useCase.fetchTradeList(category)
             
             await MainActor.run {
                 switch category {

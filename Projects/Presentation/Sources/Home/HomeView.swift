@@ -81,6 +81,9 @@ public struct HomeView: View {
                         HStack {
                             ForEach(viewModel.recentNanuaList) { nanua in
                                 SqureCell(trade: nanua)
+                                    .onTapGesture {
+                                        viewModel.push(.tradeDetail(nanua))
+                                    }
                             }
                         }
                         .padding(.horizontal)
@@ -110,6 +113,9 @@ public struct HomeView: View {
                         HStack {
                             ForEach(viewModel.recentbaccuaList) { baccua in
                                 SqureCell(trade: baccua)
+                                    .onTapGesture {
+                                        viewModel.push(.tradeDetail(baccua))
+                                    }
                             }
                         }
                         .padding(.horizontal)

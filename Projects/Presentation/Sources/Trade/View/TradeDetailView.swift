@@ -29,8 +29,9 @@ public struct TradeDetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
                     TabView(selection: $imageSelection) {
-                        ForEach(viewModel.imageURLs.indices, id: \.self) { index in
-                            let url = viewModel.imageURLs[index]
+                        ForEach(viewModel.trade.imageURLs.indices, id: \.self) { index in
+                            let url = URL(string: viewModel.trade.imageURLs[index])
+                            
                             AsyncImage(url: url) { image in
                                 image
                                     .resizable()
@@ -55,6 +56,8 @@ public struct TradeDetailView: View {
                         Text(viewModel.trade.createdAt.relativeFormat)
                             .anbdFont(.body2)
                             .foregroundStyle(Color.g600)
+                        
+                        Spacer()
                     }
                     .padding(.horizontal)
                     
@@ -84,7 +87,7 @@ public struct TradeDetailView: View {
                 Button {
                     isLiked.toggle()
                 } label: {
-                    Image(systemName: "heart")
+                    Image(systemName: isLiked ? "heart.fill" : "heart")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 20, height: 20)

@@ -7,15 +7,20 @@
 //
 
 import ANBDCore
+import FirebaseStorage
 
 import UIKit
 
 public final class StorageService {
     
     private let storage = FireStoreDB.storage
+    private let metadata = StorageMetadata()
+    
     public static let shared = StorageService()
     
-    private init() { }
+    private init() { 
+        metadata.contentType = "image/jpeg"
+    }
     
     
     public func uploadImage(
@@ -31,13 +36,13 @@ public final class StorageService {
             .child(path.name)
             .child(id)
             .child(imageName)
-        
+            
         guard let resizedImage = await UIImage(data: image)?
             .byPreparingThumbnail(ofSize: imageName == "thumbnail" ? .init(width: 512, height: 512) : .init(width: 1024, height: 1024))?
             .jpegData(compressionQuality: 1)
         else { throw StorageError.uploadError }
         
-        let _ = try await ref.putDataAsync(resizedImage)
+        let _ = try await ref.putDataAsync(resizedImage, metadata: metadata)
         let url = try await ref.downloadURL().absoluteString
         return url
     }
@@ -98,6 +103,34 @@ public final class StorageService {
         }
                 
         return urls
+    }
+    
+    public func deleteImage(
+        path: StoragePath,
+        id: String,
+        name: String
+    ) async throws {
+        if id.isEmpty { throw StorageError.emptyID }
+        
+        try await storage
+            .child(path.name)
+            .child(id)
+            .child(name)
+            .delete()
+    }
+    
+    public func deleteImageList(
+        path: StoragePath,
+        id: String
+    ) async throws {
+        if id.isEmpty { throw StorageError.emptyID }
+        
+        try await storage
+            .child(path.name)
+            .child(id)
+            .delete()
+//            .listAll()
+//            .items
     }
     
 }
