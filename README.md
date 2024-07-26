@@ -1,6 +1,6 @@
 ![Swift 5.10](https://img.shields.io/badge/Swift-5.10-F05138.svg?style=flat&color=F05138) 
 ![Xcode 15.3](https://img.shields.io/badge/Xcode-15.3-147EFB.svg?style=flat&color=147EFB)
-![iOS 15.0+](https://img.shields.io/badge/iOS-15.0+-147EFB.svg?style=flat&color=00E007)
+![iOS 16.0+](https://img.shields.io/badge/iOS-16.0+-147EFB.svg?style=flat&color=00E007)
 ![Tuist 4.18](https://img.shields.io/badge/Tuist-4.18-147EFB.svg?style=flat&color=6E12CB)
 
 # 🐳 ANBD
@@ -67,7 +67,7 @@
 
 ## 모듈 구조
 
-![graph](https://github.com/jihoooo97/ANBD/assets/49361214/ded24646-bdf8-4b26-b37b-b847e01307a6)
+![graph](https://github.com/jihoooo97/ANBD/blob/main/graph.png)
 
 > **모듈화**
 ```
@@ -80,8 +80,12 @@
 App 모듈 (App, DI, Coordinator)
 - **Presentation**  
 UI관련 모듈 (View, ViewModel)
+- **Data**  
+서버, 로컬 데이터와 직접적으로 통신하는 모듈
+- **Domain**  
+비즈니스 로직 모듈
 - **ANBDCore**  
-서버 통신, 비즈니스 로직, 공통 기능(Enum, Extension, Manager)
+공통 기능(Enum, Extension, Manager), 외부 라이브러리 의존성
 - **CommonUI**  
 앱 전반으로 쓰일 공통 UI 모듈 (ViewModifier, Custom View, UI-Extension, Font · Color Enum)
 
