@@ -81,8 +81,10 @@ public struct SignUpTermsView: View {
                 "가입 완료",
                 disabled: !isEssentialAgree
             ) {
-                UserDefaults.standard.set(true, forKey: "isLogined")
-                viewModel.popToRoot()
+                Task {
+                    await viewModel.signUp(isAgreeMarketing: isAgreeToMarketing)
+                    viewModel.popToRoot()
+                }
             }
             .frame(height: 56)
             .padding(.vertical, 8)

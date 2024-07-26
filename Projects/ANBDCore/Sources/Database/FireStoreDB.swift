@@ -12,7 +12,7 @@ import FirebaseStorage
 public enum FireStoreDB {
     
     public static var user: CollectionReference {
-        Firestore.firestore().collection("User")
+        Firestore.firestore().collection("TestUser")
     }
     
     public static var article: CollectionReference {
@@ -28,7 +28,7 @@ public enum FireStoreDB {
     }
     
     public static var chat: CollectionReference {
-        Firestore.firestore().collection("ChatRoom")
+        Firestore.firestore().collection("TestChatRoom")
     }
     
     public static var banner: CollectionReference {

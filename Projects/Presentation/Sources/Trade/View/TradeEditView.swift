@@ -46,7 +46,7 @@ public struct TradeEditView: View {
             self.myProduct = trade.myProduct
             self.wantProduct = trade.wantProduct ?? ""
             self.itemCategory = ItemCategory.allCases.first { $0.name == trade.itemCategory } ?? .none
-            self.location = Location.allCases.first{ $0.name == trade.location } ?? .seoul
+            self.location = Location.allCases.first{ $0.rawValue == trade.location } ?? .seoul
             self.content = trade.content
         }
     }
@@ -164,7 +164,7 @@ public struct TradeEditView: View {
                         Text("지역")
                             .anbdFont(.subtitle2)
                         
-                        Text(location.name)
+                        Text(location.rawValue)
                     }
                     
                     VStack(alignment: .leading) {

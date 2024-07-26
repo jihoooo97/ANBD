@@ -7,10 +7,14 @@
 //
 
 import ANBDCore
+import Domain
+
 import Foundation
 import Combine
 
 public final class LoginViewModel: BaseViewModel<LoginCoordinator> {
+    
+    private let useCase: AuthUseCase
     
     @Published var email: String = ""
     @Published private(set) var emailDebounced: String = ""
@@ -21,7 +25,8 @@ public final class LoginViewModel: BaseViewModel<LoginCoordinator> {
     @Published private(set) var validationState: AuthFieldState = .empty
     
     
-    public override init(coordinator: LoginCoordinator) {
+    public init(coordinator: LoginCoordinator, useCase: AuthUseCase) {
+        self.useCase = useCase
         super.init(coordinator: coordinator)
         
         $email
@@ -60,6 +65,14 @@ public final class LoginViewModel: BaseViewModel<LoginCoordinator> {
             validationState = .empty
         } else {
             validationState = .success
+        }
+    }
+    
+    func login() async {
+        do {
+            try await useCase.requestLogin(email: emailDebounced, password: passwordDebounced)
+        } catch {
+            print(error.localizedDescription)
         }
     }
     

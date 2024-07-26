@@ -13,11 +13,14 @@ import Foundation
 
 public final class ArticleDetailViewModel: BaseViewModel<TabCoordinator> {
     
+    private let commentUseCase: CommentUseCase
+    
     @Published private(set) var article: Article
     @Published private(set) var commentList: [Comment] = []
     
     
-    public init(coordinator: TabCoordinator, article: Article) {
+    public init(coordinator: TabCoordinator, commentUseCase: CommentUseCase, article: Article) {
+        self.commentUseCase = commentUseCase
         self.article = article
         super.init(coordinator: coordinator)
     }
@@ -25,17 +28,33 @@ public final class ArticleDetailViewModel: BaseViewModel<TabCoordinator> {
     
     func fetchCommentList() async {
         do {
-            let documentsSnapshot = try await FireStoreDB.comment
-                .whereField("articleID", isEqualTo: article.id)
-                .order(by: "createdAt")
-                .getDocuments()
-                .documents
-            
-            let commentList = documentsSnapshot.compactMap { try? $0.data(as: Comment.self) }
+            let commentList = try await commentUseCase.fetchCommentList(article.id)
             
             await MainActor.run {
                 self.commentList = commentList
             }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func writeComment(content: String) async {
+        guard !content.isEmpty,
+              let userID = UserDefaultsManager.uid
+//              let nickname = UserDefaultsManager.nickname
+//              let profileImage = UserDefaultsManager.profileImage
+        else { return }
+        
+        do {
+            let comment = Comment(
+                articleID: article.id,
+                writerID: userID,
+                writerNickname: "jito",
+                writerProfileImageURL: "https://firebasestorage.googleapis.com/v0/b/anbd-project3.appspot.com/o/Profile%2FDefaultUserProfileImage.png?alt=media&token=fc0e56d9-6855-4ead-ab28-d8ff789799b3",
+                content: content
+            )
+            try await commentUseCase.writeComment(comment)
+            await fetchCommentList()
         } catch {
             print(error.localizedDescription)
         }

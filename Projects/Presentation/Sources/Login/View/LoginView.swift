@@ -64,7 +64,7 @@ public struct LoginView: View {
                 "로그인",
                 disabled: viewModel.validationState != .success
             ) {
-                UserDefaults.standard.set(true, forKey: "isLogined")
+                Task { await viewModel.login() }
             }
             .frame(height: 56)
             .padding(.vertical, 24)

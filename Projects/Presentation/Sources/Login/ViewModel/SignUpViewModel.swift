@@ -6,10 +6,15 @@
 //  Copyright © 2024 jiho. All rights reserved.
 //
 
+import ANBDCore
+import Domain
+
 import Foundation
 import Combine
 
 public final class SignUpViewModel: BaseViewModel<LoginCoordinator> {
+    
+    private let useCase: AuthUseCase
     
     @Published var email: String = ""
     @Published private(set) var emailDebounced: String = ""
@@ -23,7 +28,8 @@ public final class SignUpViewModel: BaseViewModel<LoginCoordinator> {
     @Published private(set) var validationState: AuthFieldState = .empty
     
     
-    public override init(coordinator: LoginCoordinator) {
+    public init(coordinator: LoginCoordinator, useCase: AuthUseCase) {
+        self.useCase = useCase
         super.init(coordinator: coordinator)
         
         $email
@@ -72,6 +78,21 @@ public final class SignUpViewModel: BaseViewModel<LoginCoordinator> {
             validationState = .empty
         } else {
             validationState = .success
+        }
+    }
+    
+    func signUp(isAgreeMarketing: Bool) async {
+        print(emailDebounced, passwordDebounced, nicknameDebounced, isAgreeMarketing)
+        do {
+            try await useCase.requestSignUp(
+                email: emailDebounced,
+                password: passwordDebounced,
+                nickname: nicknameDebounced,
+                location: .seoul,
+                isAgreeMarketing: isAgreeMarketing
+            )
+        } catch {
+            print(error.localizedDescription)
         }
     }
     

@@ -29,10 +29,14 @@ public final class ArticleEditViewModel: BaseViewModel<TabCoordinator> {
         content: String,
         imageDatas: [Data]
     ) async {
+        guard let userID = UserDefaultsManager.uid,
+            let nickname = UserDefaultsManager.nickname
+        else { return }
+        
         do {
             var article = Article(
-                writerID: "jiho",
-                writerNickname: "지호구",
+                writerID: userID,
+                writerNickname: nickname,
                 category: category,
                 title: title,
                 content: content,

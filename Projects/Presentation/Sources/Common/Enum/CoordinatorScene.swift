@@ -36,7 +36,7 @@ public enum TabScene: Sceneable {
     case tradeEdit(TradeCategory, Trade?)
     
     case chatList, chatRoom
-    case profile
+    case profile(id: String)
     
     public var id: String { "\(self)" }
 }

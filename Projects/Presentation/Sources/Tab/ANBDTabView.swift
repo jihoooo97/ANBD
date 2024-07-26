@@ -15,17 +15,20 @@ public struct ANBDTabView: View {
     private let homeView: HomeView
     private let articleView: ArticleView
     private let tradeView: TradeView
+    private let profileView: ProfileView
     
     public init(
         coordinator: TabCoordinator,
         homeView: HomeView,
         articleView: ArticleView,
-        tradeView: TradeView
+        tradeView: TradeView,
+        profileView: ProfileView
     ) {
         self.coordinator = coordinator
         self.homeView = homeView
         self.articleView = articleView
         self.tradeView = tradeView
+        self.profileView = profileView
     }
     
     public var body: some View {
@@ -60,6 +63,17 @@ public struct ANBDTabView: View {
                     }
             }
             .tabItem(of: .trade)
+            
+            NavigationStack(path: $coordinator.profilePath) {
+                profileView
+//                    .navigationTitle("내 정보")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(for: TabScene.self) { scene in
+                        coordinator.buildScene(scene)
+                            .toolbarRole(.editor)
+                    }
+            }
+            .tabItem(of: .profile)
         }
     }
 }

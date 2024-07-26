@@ -64,8 +64,5 @@ public struct SignUpEmailView: View {
         }
         .padding(.horizontal)
         .toolbarRole(.editor)
-        .onDisappear {
-            viewModel.email = ""
-        }
     }
 }

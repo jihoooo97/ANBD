@@ -29,7 +29,7 @@ public struct ArticleDetailView: View {
                                 .anbdFont(.subtitle3)
                                 .foregroundStyle(Color.g900)
                                 .onTapGesture {
-                                    viewModel.push(.profile)
+                                    viewModel.push(.profile(id: viewModel.article.writerID))
                                 }
                             
                             Text(viewModel.article.createdAt.relativeFormat)
@@ -81,7 +81,7 @@ public struct ArticleDetailView: View {
                         
                         Divider()
                         
-                        Text("댓글 \(viewModel.article.commentCount)")
+                        Text("댓글 \(viewModel.commentList.count)")
                             .anbdFont(.subtitle3)
                         
                         VStack(alignment: .leading, spacing: 16) {
@@ -92,7 +92,7 @@ public struct ArticleDetailView: View {
                                             .anbdFont(.subtitle3)
                                             .foregroundStyle(Color.g900)
                                             .onTapGesture {
-                                                viewModel.push(.profile)
+                                                viewModel.push(.profile(id: comment.writerID))
                                             }
                                         
                                         Text(comment.createdAt.relativeFormat)
@@ -125,7 +125,11 @@ public struct ArticleDetailView: View {
                         .anbdFont(.caption2)
                     
                     Button {
-                        
+                        Task {
+                            await viewModel.writeComment(content: commentContent)
+                            commentContent = ""
+                            focused = false
+                        }
                     } label: {
                         Image(systemName: "arrowshape.up.circle")
                             .resizable()

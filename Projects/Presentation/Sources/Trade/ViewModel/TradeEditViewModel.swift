@@ -39,7 +39,7 @@ public final class TradeEditViewModel: BaseViewModel<TabCoordinator> {
                 writerNickname: "지호구",
                 category: category,
                 itemCategory: itemCategory.name,
-                location: location.name,
+                location: location.rawValue,
                 title: title,
                 content: content,
                 myProduct: myProduct,

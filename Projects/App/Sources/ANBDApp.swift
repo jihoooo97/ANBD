@@ -8,30 +8,26 @@ import FirebaseCore
 @main
 struct ANBDApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    private let injector: Injector = DependencyInjector(container: .init())
+    private let injector: Injector = DependencyInjector.shared
 
-    @AppStorage("isLogined") private var isLogined = false
+    @AppStorage("uid") private var isLogined: String?
     
-    @ObservedObject private var loginCoordinator = LoginCoordinator()
-    @ObservedObject private var tabCoordinator = TabCoordinator()
+    @StateObject private var signUpViewModel: SignUpViewModel = DependencyInjector.shared.resolve(SignUpViewModel.self)
+    
+    @ObservedObject private var loginCoordinator = LoginCoordinator.shared
+    @ObservedObject private var tabCoordinator = TabCoordinator.shared
     
     init() {
         injector.assemble([
             DataAssembly(),
             DomainAssembly(),
-            PresentationAssembly(
-                loginCoordinator: loginCoordinator,
-                tabCoordinator: tabCoordinator
-            )
+            PresentationAssembly()
         ])
-        
-        loginCoordinator.injector = injector
-        tabCoordinator.injector = injector
     }
 
     var body: some Scene {
         WindowGroup {
-            if isLogined {
+            if let isLogined {
                 tabCoordinator.buildScene(.tab)
                     .sheet(item: $tabCoordinator.sheet) { scene in
                         tabCoordinator.buildScene(scene)
@@ -41,7 +37,7 @@ struct ANBDApp: App {
                     loginCoordinator.buildScene(.login)
                         .navigationDestination(for: AuthScene.self) { scene in
                             loginCoordinator.buildScene(scene)
-                                .environmentObject(injector.resolve(SignUpViewModel.self))
+                                .environmentObject(signUpViewModel)
                         }
                         .sheet(item: $loginCoordinator.sheet) { scene in
                             loginCoordinator.buildScene(scene)

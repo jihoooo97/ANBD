@@ -10,17 +10,19 @@ import ANBDCore
 import Domain
 import Presentation
 
+import SwiftUI
 import Swinject
 
 struct PresentationAssembly: Assembly {
     
-    let loginCoordinator: LoginCoordinator
-    let tabCoordinator: TabCoordinator
+    let loginCoordinator: LoginCoordinator = .shared
+    let tabCoordinator: TabCoordinator = .shared
     
     func assemble(container: Container) {
         // MARK: Login
-        container.register(LoginViewModel.self) { _ in
-            return LoginViewModel(coordinator: loginCoordinator)
+        container.register(LoginViewModel.self) { resolver in
+            let useCase = resolver.resolve(AuthUseCase.self)!
+            return LoginViewModel(coordinator: loginCoordinator, useCase: useCase)
         }
         
         container.register(LoginView.self) { resolver in
@@ -30,8 +32,9 @@ struct PresentationAssembly: Assembly {
         
         
         // MARK: SignUp
-        container.register(SignUpViewModel.self) { _ in
-            return SignUpViewModel(coordinator: loginCoordinator)
+        container.register(SignUpViewModel.self) { resolver in
+            let useCase = resolver.resolve(AuthUseCase.self)!
+            return SignUpViewModel(coordinator: loginCoordinator, useCase: useCase)
         }
         
         container.register(SignUpEmailView.self) { _ in
@@ -55,17 +58,37 @@ struct PresentationAssembly: Assembly {
         }
         
         
+        // MARK: Profile
+        container.register(ProfileViewModel.self) { (resolver, id: String) in
+            let authUseCase = resolver.resolve(AuthUseCase.self)!
+            let userUseCase = resolver.resolve(UserUseCase.self)!
+            return ProfileViewModel(
+                coordinator: tabCoordinator,
+                authUseCase: authUseCase,
+                userUseCase: userUseCase,
+                id: id
+            )
+        }
+        
+        container.register(ProfileView.self) { (resolver, id: String) in
+            let viewModel = resolver.resolve(ProfileViewModel.self, argument: id)!
+            return ProfileView(viewModel: viewModel)
+        }
+        
+        
         // MARK: TabView
         container.register(ANBDTabView.self) { resolver in
             let homeView = resolver.resolve(HomeView.self)!
             let articleView = resolver.resolve(ArticleView.self, argument: ArticleCategory.accua)!
             let tradeView = resolver.resolve(TradeView.self, argument: TradeCategory.nanua)!
+            let profileView = resolver.resolve(ProfileView.self, argument: UserDefaultsManager.uid ?? "")!
             
             return ANBDTabView(
                 coordinator: tabCoordinator,
                 homeView: homeView,
                 articleView: articleView,
-                tradeView: tradeView
+                tradeView: tradeView,
+                profileView: profileView
             )
         }
         
@@ -102,7 +125,8 @@ struct PresentationAssembly: Assembly {
         }
         
         container.register(ArticleDetailViewModel.self) { (resolver, article: Article) in
-            return ArticleDetailViewModel(coordinator: tabCoordinator, article: article)
+            let commentUseCase = resolver.resolve(CommentUseCase.self)!
+            return ArticleDetailViewModel(coordinator: tabCoordinator, commentUseCase: commentUseCase, article: article)
         }
         
         container.register(ArticleDetailView.self) { (resolver, article: Article) in

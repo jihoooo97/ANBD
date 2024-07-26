@@ -13,10 +13,12 @@ public final class LoginCoordinator: Coordinator {
 
     public typealias S = AuthScene
     
-    public var injector: Injector?
+    public var injector: Injector? = DependencyInjector.shared
     
     @Published public var path: NavigationPath = .init()
     @Published public var sheet: AuthScene?
+    
+    public static let shared = LoginCoordinator()
     
     
     public init() { }

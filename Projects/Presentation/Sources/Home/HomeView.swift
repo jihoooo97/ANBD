@@ -159,7 +159,7 @@ public struct HomeView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    viewModel.push(.profile)
+//                    viewModel.push(.profile)
                 } label: {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(Color.g900)

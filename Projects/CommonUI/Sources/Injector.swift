@@ -27,6 +27,8 @@ public final class DependencyInjector: Injector {
     
     private let container: Container
     
+    public static let shared = DependencyInjector(container: .init())
+    
     public init(container: Container) {
         self.container = container
     }

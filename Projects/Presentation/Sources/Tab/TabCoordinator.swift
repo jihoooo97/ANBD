@@ -13,7 +13,7 @@ public final class TabCoordinator: Coordinator {
 
     public typealias S = TabScene
     
-    public var injector: Injector?
+    public var injector: Injector? = DependencyInjector.shared
     
     @Published public var selection: ANBDTab = .home
     
@@ -26,6 +26,7 @@ public final class TabCoordinator: Coordinator {
     
     @Published public var sheet: TabScene?
     
+    public static let shared = TabCoordinator()
     
     public init() { }
     
@@ -74,6 +75,8 @@ public final class TabCoordinator: Coordinator {
                 .toolbar(.hidden, for: .tabBar)
         case .tradeEdit(let category, let trade):
             injector?.resolve(TradeEditView.self, arg1: category, arg2: trade)
+        case .profile(let id):
+            injector?.resolve(ProfileView.self, arg: id)
         default:
             Text("\(scene)")
                 .toolbar(.hidden, for: .tabBar)
