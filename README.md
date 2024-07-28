@@ -51,7 +51,7 @@
 | 버전 | iOS 16.0+ |
 |:-:|:-:|
 | Framework | SwiftUI |
-| 구조 | MVVM-C + Combine |
+| 구조 | MVVM + Clean + Architecture Combine |
 | DI | Swinject |
 | BaaS | FirebaseFirestore |
 | Library | Firebase, Kingfisher |
